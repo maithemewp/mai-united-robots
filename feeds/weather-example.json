@@ -1,0 +1,69 @@
+{
+	"format": "unitedrobots4",
+	"customer": {
+	  "name": "Advance Local Weather Warnings"
+	},
+	"receiver": {
+	  "name": "New Jersey",
+	  "siteContext": "ex_ctx"
+	},
+	"article": {
+	  "id": "weather_warning_221754_urn:oid:2.49.0.1.840.0.9bf39bae7f51d0e4bcd9a365e8d757c308469631.002.1",
+	  "createdAt": "2023-10-31T07:15:47.549Z",
+	  "generatedAt": "2023-11-01T03:35:45.526Z",
+	  "locale": "sv_SE",
+	  "type": "weather_warning",
+	  "priority": 1,
+	  "status": "changed",
+	  "text": {
+		"title": "UPDATE: 16 N.J. counties impacted by a freeze watch on Thursday",
+		"bodyParts": [
+		  "An update to the current freeze watch was issued by the National Weather Service at 11:29 p.m. on Tuesday valid for Thursday between midnight and 10 a.m. for Sussex, Warren, Morris, Hunterdon, Somerset, Middlesex, Monmouth, Mercer, Salem, Gloucester, Camden, Burlington, Ocean, Cumberland, Atlantic and Cape May counties.",
+		  "Sub-freezing temperatures as low as 27 possible for portions of Delaware, the eastern shores of Maryland, New Jersey, and southeast Pennsylvania from late Wednesday night through Thursday morning.",
+		  "According to the weather service, \"Frost and freeze conditions will kill crops and other sensitive vegetation.\"",
+		  "According to the weather service, \"Take steps now to protect tender plants from the cold.\"",
+		  "This watch is in effect until Thursday at 10 a.m.",
+		  "{PLACEHOLDER:IMAGE_WeatherWarningImage}",
+		  "<h3>Freeze watch or warning - this is what it means</h3>",
+		  "Freeze warnings are issued from May to October (but can be extended if necessary), when low temperatures are expected to be 29-32 degrees. If there is a potential for temperatures to fall into these thresholds, a freeze watch may be issued a few days ahead of time.",
+		  "According to the weather service, if a freeze warning or watch is issued for your area, there is little you can do to protect plants. If you can move your sensitive plants inside, do so because the freeze will likely kill them, depending on the severity of conditions.",
+		  "Source: The National Weather Service"
+		]
+	  }
+	},
+	"referenceId": 800556923,
+	"description": {
+	  "images": {
+		"WeatherWarningImage": {
+		  "url": "https://published.unitedrobots.se/images/img_800556921_WeatherWarningImage.png",
+		  "byline": "",
+		  "caption": ""
+		},
+		"WeatherWarningImageHorizontal": {
+		  "url": "https://published.unitedrobots.se/images/img_800556921_WeatherWarningImageHorizontal.png",
+		  "byline": "",
+		  "caption": ""
+		}
+	  },
+	  "articleMeta": {
+		"thumbnail": [
+		  "WeatherWarningImageHorizontal"
+		],
+		"featured-media": [
+		  "WeatherWarningImageHorizontal"
+		]
+	  },
+	  "seo": {
+		"title": "16 N.J. counties freeze watch updates for Thursday",
+		"teaser": "Get the latest information on the current freeze watch with our updates",
+		"summary": "NWS Mount Holly NJ issues a freeze watch for Thursday November 2nd for 16 N.J. counties. Check back here for updates.",
+		"keywords": "Freeze watch, forecast, update, North Texas, Fort Worth",
+		"meta_title": "16 N.J. counties freeze watch updates for Thursday"
+	  }
+	},
+	"siteContext": "ex_ctx",
+	"sent": {
+	  "first": "2023-10-31T07:16:40.345Z",
+	  "latest": "2023-11-14T10:39:30.623Z"
+	}
+  }

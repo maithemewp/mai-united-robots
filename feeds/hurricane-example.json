@@ -1,0 +1,60 @@
+{
+	"format": "unitedrobots4",
+	"customer": {
+	  "name": "Hurricane All Systems"
+	},
+	"receiver": {
+	  "name": "Hurricane All Systems"
+	},
+	"article": {
+	  "id": "hurricane_AL152023--2023-09-21T22:00:00-05:00",
+	  "createdAt": "2023-09-21T08:46:48.822Z",
+	  "generatedAt": "2023-09-22T03:00:48.624Z",
+	  "locale": "sv_SE",
+	  "type": "hurricane",
+	  "priority": 1,
+	  "status": "changed",
+	  "text": {
+		"title": "Category 1 Hurricane Nigel: National Hurricane Center's Thursday, Sep 21 status report",
+		"bodyParts": [
+		  "Article first published: Thursday, Sep. 21, 2023, 4 a.m. ET",
+		  "Article last updated: Thursday, Sep. 21, 2023, 10 p.m. ET",
+		  "As per the National Hurricane Center's 10 pm Thursday update, Category 1 Hurricane Nigel is 700 miles northwest of the Azores, with maximum sustained wind of 75 mph. It’s moving 37 mph to the east-northeast.",
+		  "\"Weakening is forecast during the next couple of days, and Nigel is forecast to become a post-tropical cyclone tonight or early Friday.\" forecasters explained.",
+		  "YESTERDAY (Wednesday):",
+		  "Yesterday, Nigel lost momentum and regressed from a Category 2 hurricane to a Category 1 hurricane, with winds of 75 miles per hour.",
+		  "Source: National Hurricane Center"
+		]
+	  }
+	},
+	"referenceId": 800499703,
+	"description": {
+	  "api": "nhc",
+	  "date": "2023-09-21",
+	  "systemId": "AL152023",
+	  "id": "nhc--AL152023--2023-09-21",
+	  "reportedAt": "2023-09-22T03:00:00Z",
+	  "images": [
+		"http://published.unitedrobots.se/hurricane/nhc/AL152023-2023-09-22T03%3A00%3A00Z.png"
+	  ],
+	  "SEO": {
+		"title": "Category 1 Hurricane Nigel path, advisory & warnings for Sep. 21",
+		"teaser": "Here's the latest on Category 1 Hurricane Nigel",
+		"summary": "National Hurricane Center data reports Category 1 Hurricane Nigel, with a maximum sustained wind of 75 mph is moving 37 mph to the east-northeast, as of Thursday, September 21, 2023, 22:00 ET.",
+		"keywords": "Category 1 Hurricane, Nigel , path, forecast, weather",
+		"meta_title": "Category 1 Hurricane Nigel path, advisory & warnings"
+	  },
+	  "seo": {
+		"title": "Category 1 Hurricane Nigel path, advisory & warnings for Sep. 21",
+		"teaser": "Here's the latest on Category 1 Hurricane Nigel",
+		"summary": "National Hurricane Center data reports Category 1 Hurricane Nigel, with a maximum sustained wind of 75 mph is moving 37 mph to the east-northeast, as of Thursday, September 21, 2023, 22:00 ET.",
+		"keywords": "Category 1 Hurricane, Nigel , path, forecast, weather",
+		"meta_title": "Category 1 Hurricane Nigel path, advisory & warnings"
+	  }
+	},
+	"sent": {
+	  "first": "2023-09-21T08:46:50.464Z",
+	  "latest": "2023-11-14T10:31:26.667Z"
+	},
+	"id": 4706
+  }

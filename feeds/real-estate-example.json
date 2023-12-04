@@ -1,0 +1,133 @@
+{
+	"format": "unitedrobots4",
+	"customer": {
+	  "name": "Advance Local"
+	},
+	"receiver": {
+	  "name": "LVL - Top Lists",
+	  "siteContext": "ex_ctx"
+	},
+	"article": {
+	  "id": "lagfart-intl-summary_toplist_Northampton_County_PA_20231106_20231112_134410955",
+	  "createdAt": "2023-11-13T06:06:06.798Z",
+	  "generatedAt": "2023-11-13T06:06:06.798Z",
+	  "type": "lagfart-intl-summary",
+	  "priority": 1,
+	  "status": "changed",
+	  "text": {
+		"title": "10 most expensive homes sold in Northampton County, Nov. 6-12",
+		"bodyParts": [
+		  "A house in Easton that sold for $1.9 million tops the list of the most expensive residential real estate sales in Northampton County in the past week.",
+		  "In total, 87 residential real estate sales were recorded in the area during the past week, with an average price of $349,901, $191 per square foot.",
+		  "The prices in the list below concern real estate sales where the title was recorded during the week of Nov. 6 even if the property may have been sold earlier.",
+		  "<h2>10. $531K, single-family house at 4441 Fairway Drive </h2>",
+		  "The property at 4441 Fairway Drive in Easton has new owners. The price was $531,000. The house was built in 1969 and has a living area of 2,891 square feet. The price per square foot is $184. The deal was finalized on Oct. 31.",
+		  "<h2>9. $558K, single-family home at 4569 Meadow Drive </h2>",
+		  "The 2,476 square-foot detached house at 4569 Meadow Drive, Nazareth, has been sold. The transfer of ownership was settled in November and the total purchase price was $558,000, $225 per square foot. The house was built in 1995. The deal was finalized on Nov. 3.",
+		  "{PLACEHOLDER:STREETVIEW_http://published.unitedrobots.se/lagfart/2023-11-13/149246621_2023-10-30_propmix_260012564_main.jpeg}",
+		  "<h2>8. $560K, detached house at 1571 Toursdale Drive </h2>",
+		  "The property at 1571 Toursdale Drive in Easton has new owners. The price was $560,000. The house was built in 2000 and has a living area of 2,630 square feet. The price per square foot is $213. The deal was finalized on Oct. 30.",
+		  "<h2>7. $565K, single-family residence at 3803 Loyal Lane </h2>",
+		  "A sale has been finalized for the single-family home at 3803 Loyal Lane in Easton. The price was $565,000 and the new owners took over the house in October. The house was built in 2021 and the living area totals 2,174 square feet. The price per square foot ended up at $260. The deal was finalized on Oct. 30.",
+		  "{PLACEHOLDER:STREETVIEW_http://published.unitedrobots.se/lagfart/2023-11-13/149294182_2023-10-31_propmix_260012564_main.jpeg}",
+		  "<h2>6. $570K, single-family house at 4451 Green Pond Road </h2>",
+		  "The 2,338 square-foot single-family home at 4451 Green Pond Road in Easton has been sold. The transfer of ownership was settled in October and the total purchase price was $569,900, $244 per square foot. The house was built in 1900. The deal was finalized on Oct. 31.",
+		  "{PLACEHOLDER:STREETVIEW_http://published.unitedrobots.se/lagfart/2023-11-13/149289072_2023-11-03_propmix_260012564_main.jpeg}",
+		  "<h2>5. $595K, single-family residence at 2748 Clark Place </h2>",
+		  "The sale of the single-family house at 2748 Clark Place, Easton, has been finalized. The price was $595,000, and the house changed hands in November. The house was built in 2008 and has a living area of 2,839 square feet. The price per square foot was $210. The deal was finalized on Nov. 3.",
+		  "{PLACEHOLDER:STREETVIEW_http://published.unitedrobots.se/lagfart/2023-11-13/149289597_2023-10-30_propmix_260012564_main.jpeg}",
+		  "<h2>4. $633K, detached house at 2695 Clark Place </h2>",
+		  "The sale of the single family residence at 2695 Clark Place in Easton has been finalized. The price was $633,000, and the new owners took over the house in October. The house was built in 2002 and has a living area of 2,622 square feet. The price per square foot was $241. The deal was finalized on Oct. 30.",
+		  "{PLACEHOLDER:STREETVIEW_http://published.unitedrobots.se/lagfart/2023-11-13/149309793_2023-11-02_propmix_260012564_main.jpeg}",
+		  "<h2>3. $725K, single-family home at 85 Melchor Drive </h2>",
+		  "The sale of the single family residence at 85 Melchor Drive in Easton has been finalized. The price was $724,900, and the new owners took over the house in November. The house was built in 2003 and has a living area of 3,599 square feet. The price per square foot was $201. The deal was finalized on Nov. 2.",
+		  "<h2>2. $1 million, single-family home at 4135 Jacksonville Road </h2>",
+		  "The 8,977 square-foot single-family residence at 4135 Jacksonville Road, Bethlehem, has been sold. The transfer of ownership was settled in October and the total purchase price was $1,000,000, $111 per square foot. The house was built in 2004. The deal was finalized on Oct. 30.",
+		  "{PLACEHOLDER:STREETVIEW_http://published.unitedrobots.se/lagfart/2023-11-13/149306806_2023-11-02_propmix_260012564_main.jpeg}",
+		  "<h2>1. $1.9 million, detached house at 3501 Chipman Road </h2>",
+		  "The property at 3501 Chipman Road in Easton has new owners. The price was $1,900,000. The house was built in 1990 and has a living area of 5,900 square feet. The price per square foot is $322. The deal was finalized on Nov. 2.",
+		  "<i>Real Estate Newswire is a service provided by United Robots, which uses machine learning to generate analysis of data from Propmix, an aggregator of national real-estate data.</i>"
+		]
+	  }
+	},
+	"referenceId": 701189007,
+	"description": {
+	  "id": "summary_toplist$Northampton County_PA$2023-11-06$2023-11-12$Condominium,Manufactured Home,Single Family Residence,Townhouse",
+	  "name": "Summary for Northampton County_PA",
+	  "type": "summary_toplist",
+	  "period": "2023-11-06 - 2023-11-12",
+	  "zipGroup": "Northampton County_PA",
+	  "saleTypes": "Condominium,Manufactured Home,Single Family Residence,Townhouse",
+	  "shortId": "toplist_Northampton_County_PA_20231106_20231112_134410955",
+	  "housingTypes": [
+		"house",
+		"house",
+		"house",
+		"house",
+		"house",
+		"house",
+		"house",
+		"house",
+		"house",
+		"house"
+	  ],
+	  "streetAddressBlocks": [
+		"3500 block of Chipman Road",
+		"4100 block of Jacksonville Road",
+		"first block of Melchor Drive",
+		"2600 block of Clark Place",
+		"2700 block of Clark Place",
+		"4400 block of Green Pond Road",
+		"3800 block of Loyal Lane",
+		"1500 block of Toursdale Drive",
+		"4500 block of Meadow Drive",
+		"4400 block of Fairway Drive"
+	  ],
+	  "streetviews": [
+		"http://published.unitedrobots.se/lagfart/2023-11-13/149246621_2023-10-30_propmix_260012564_main.jpeg",
+		"http://published.unitedrobots.se/lagfart/2023-11-13/149294182_2023-10-31_propmix_260012564_main.jpeg",
+		"http://published.unitedrobots.se/lagfart/2023-11-13/149289072_2023-11-03_propmix_260012564_main.jpeg",
+		"http://published.unitedrobots.se/lagfart/2023-11-13/149289597_2023-10-30_propmix_260012564_main.jpeg",
+		"http://published.unitedrobots.se/lagfart/2023-11-13/149309793_2023-11-02_propmix_260012564_main.jpeg",
+		"http://published.unitedrobots.se/lagfart/2023-11-13/149306806_2023-11-02_propmix_260012564_main.jpeg"
+	  ],
+	  "streetviews_addresses": [
+		"Toursdale Drive",
+		"Green Pond Road",
+		"Clark Place",
+		"Clark Place",
+		"Melchor Drive",
+		"Chipman Road"
+	  ],
+	  "streetviews_addresses_block": [
+		"1500 block of Toursdale Drive",
+		"4400 block of Green Pond Road",
+		"2700 block of Clark Place",
+		"2600 block of Clark Place",
+		"first block of Melchor Drive",
+		"3500 block of Chipman Road"
+	  ],
+	  "streetviews_addresses_full": [
+		"1571 Toursdale Drive, Easton, PA",
+		"4451 Green Pond Road, Easton, PA",
+		"2748 Clark Place, Easton, PA",
+		"2695 Clark Place, Easton, PA",
+		"85 Melchor Drive, Easton, PA",
+		"3501 Chipman Road, Easton, PA"
+	  ],
+	  "streetviews_addresses_municipality_no_state": [
+		"1571 Toursdale Drive, Palmer Township",
+		"4451 Green Pond Road, Bethlehem Township",
+		"2748 Clark Place, Forks Township",
+		"2695 Clark Place, Forks Township",
+		"85 Melchor Drive, Williams Township",
+		"3501 Chipman Road, Bethlehem Township"
+	  ],
+	  "integrations": []
+	},
+	"siteContext": "ex_ctx",
+	"sent": {
+	  "first": "2023-11-13T06:06:07.551Z",
+	  "latest": "2023-11-14T10:34:34.372Z"
+	}
+  }
