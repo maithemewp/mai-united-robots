@@ -107,6 +107,7 @@ final class Mai_United_Robots_Plugin {
 	private function includes() {
 		// Include vendor libraries.
 		require_once __DIR__ . '/vendor/autoload.php';
+
 		// Includes.
 		foreach ( glob( MAI_UNITED_ROBOTS_PLUGIN_DIR . 'includes/*.php' ) as $file ) { include $file; }
 
