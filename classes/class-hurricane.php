@@ -28,7 +28,7 @@ class Mai_United_Robots_Hurricane_Listener extends Mai_United_Robots_Listener {
 
 		if ( isset( $this->body->description->images ) && ! empty( $this->body->description->images ) ) {
 			foreach ( $this->body->description->images as $image_url ) {
-				$image_urls[] = $image_id;
+				$image_urls[] = $image_url;
 			}
 		}
 

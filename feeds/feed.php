@@ -11,7 +11,8 @@
  * 2. Execute via command line: wp eval-file /Users/jivedig/Plugins/mai-united-robots/feeds/feed.php
  */
 
-$test     = 'real-estate';
+$test = 'false';
+// $test     = 'real-estate';
 // $test     = 'weather';
 // $test     = 'hurricane';
 $url      = home_url( sprintf( '/wp-json/maiunitedrobots/v1/%s', $test ) );
