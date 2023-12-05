@@ -18,6 +18,7 @@ $test = 'false';
 // $test     = 'weather';
 // $test     = 'hurricane';
 $url      = home_url( sprintf( '/wp-json/maiunitedrobots/v1/%s', $test ) );
+$file     = MAI_UNITED_ROBOTS_PLUGIN_DIR . 'feeds/' . $test . '-example.json';
 $name     = defined( 'MAI_UNITED_ROBOTS_AUTH_UN' ) ? MAI_UNITED_ROBOTS_AUTH_UN : '';
 $password = defined( 'MAI_UNITED_ROBOTS_AUTH_PW' ) ? MAI_UNITED_ROBOTS_AUTH_PW : '';
 
@@ -31,22 +32,27 @@ if ( ! $password ) {
 	return;
 }
 
+if ( ! file_exists( $file ) ) {
+	WP_CLI::log( 'File does not exists via ' . $file );
+	return;
+}
+
 WP_CLI::log( $url );
 
 // Data to be sent in the JSON packet.
 // Get content from json file.
-$data = file_get_contents( MAI_UNITED_ROBOTS_PLUGIN_DIR . 'feeds/' . $test . '-example.json' );
+$data = file_get_contents( $file );
 
 // Bail if no test data.
 if ( ! $data ) {
-	WP_CLI::log( 'No data found via ' . MAI_UNITED_ROBOTS_PLUGIN_DIR . 'feeds/' . $test . '-example.json' );
+	WP_CLI::log( 'No data found via ' . $file );
 	return;
 }
 
 // Prepare the request arguments
 $args = array(
 	'headers' => array(
-		'Authorization' => 'Basic ' . base64_encode( 'United Robots' . ':' . $password ),
+		'Authorization' => 'Basic ' . base64_encode( $name . ':' . $password ),
 	),
 	'body' => $data,
 );
