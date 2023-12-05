@@ -3,13 +3,19 @@
 // Prevent direct file access.
 defined( 'ABSPATH' ) || die;
 
-add_action( 'genesis_footer', 'mai_united_robots_test_endpoint' );
+// add_action( 'genesis_before_loop', 'mai_united_robots_test_endpoint' );
+/**
+ * Test endpoint.
+ *
+ * @return void
+ */
 function mai_united_robots_test_endpoint() {
-	$test         = 'real-estate';
-	// $test         = 'weather';
-	// $test         = 'hurricane';
-	$endpoint_url = sprintf( '%swp-json/maiunitedrobots/v1/%s/', MAI_UNITED_ROBOTS_PLUGIN_DIR, $test );
-	$bearer_token = 'dnPs LWQ4 rwMg BI9V k5yU ZEmb'; // United Robots.
+	$test     = 'real-estate';
+	// $test     = 'weather';
+	// $test     = 'hurricane';
+	$url      = home_url( sprintf( '/wp-json/maiunitedrobots/v1/%s/', $test ) );
+	$name     = 'United Robots';
+	$password = 'dnPs LWQ4 rwMg BI9V k5yU ZEmb';                                                     // United Robots.
 
 	// Data to be sent in the JSON packet.
 	// Get content from json file.
@@ -24,13 +30,15 @@ function mai_united_robots_test_endpoint() {
 	// Prepare the request arguments
 	$args = array(
 		'headers' => array(
-			'Authorization' => 'Basic ' . base64_encode( 'United Robots' . ':' . $application_password ),
+			'Authorization' => 'Basic ' . base64_encode( 'United Robots' . ':' . $password ),
 		),
 		'body' => $data,
 	);
 
 	// Make the POST request.
-	$response = wp_remote_post( $endpoint_url, $args );
+	$response = wp_remote_post( $url, $args );
+
+	ray( $response );
 
 	// Check if the request was successful
 	if ( is_wp_error( $response ) ) {
@@ -41,7 +49,7 @@ function mai_united_robots_test_endpoint() {
 		$response_body = json_decode( wp_remote_retrieve_body( $response ), true );
 
 		// Check the response
-		if (isset($response_body['message'])) {
+		if ( isset( $response_body['message'] ) ) {
 			mai_united_robots_logger( 'Response: ' . $response_body['message'] );
 		} else {
 			mai_united_robots_logger( 'Unexpected response format' );

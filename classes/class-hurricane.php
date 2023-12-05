@@ -13,7 +13,7 @@ class Mai_United_Robots_Hurricane_Listener extends Mai_United_Robots_Listener {
 	 */
 	function process() {
 		// Add (or create then add) the category.
-		wp_set_object_terms( $this->post_id, __( 'Hurricane', 'mai-united-robots' ), 'category', true );
+		wp_set_object_terms( $this->post_id, __( 'Hurricane', 'mai-united-robots' ), 'category', false );
 	}
 
 	/**
@@ -26,8 +26,8 @@ class Mai_United_Robots_Hurricane_Listener extends Mai_United_Robots_Listener {
 	function get_image_urls() {
 		$image_urls = [];
 
-		if ( isset( $this->body['description']['images'] ) && ! empty( $this->body['description']['images'] ) ) {
-			foreach ( $this->body['description']['images'] as $image_url ) {
+		if ( isset( $this->body->description->images ) && ! empty( $this->body->description->images ) ) {
+			foreach ( $this->body->description->images as $image_url ) {
 				$image_urls[] = $image_id;
 			}
 		}

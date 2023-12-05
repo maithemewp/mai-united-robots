@@ -13,7 +13,7 @@ class Mai_United_Robots_Weather_Listener extends Mai_United_Robots_Listener {
 	 */
 	function process() {
 		// Add (or create then add) the category.
-		wp_set_object_terms( $this->post_id, __( 'Weather', 'mai-united-robots' ), 'category', true );
+		wp_set_object_terms( $this->post_id, __( 'Weather', 'mai-united-robots' ), 'category', false );
 	}
 
 	/**
@@ -26,10 +26,10 @@ class Mai_United_Robots_Weather_Listener extends Mai_United_Robots_Listener {
 	function get_image_urls() {
 		$image_urls = [];
 
-		if ( isset( $this->body['description']['images']['WeatherWarningImageHorizontal'] ) && ! empty( $this->body['description']['images']['WeatherWarningImageHorizontal'] ) ) {
-			$image_urls[] = $this->body['description']['images']['WeatherWarningImageHorizontal'];
-		} elseif ( isset( $this->body['description']['images']['WeatherWarningImage'] ) && ! empty( $this->body['description']['images']['WeatherWarningImage'] ) ) {
-			$image_urls[] = $this->body['description']['images']['WeatherImage'];
+		if ( isset( $this->body->description->images->WeatherWarningImageHorizontal ) && ! empty( $this->body->description->images->WeatherWarningImageHorizontal ) ) {
+			$image_urls[] = $this->body->description->images->WeatherWarningImageHorizontal;
+		} elseif ( isset( $this->body->description->images->WeatherWarningImage ) && ! empty( $this->body->description->images->WeatherWarningImage ) ) {
+			$image_urls[] = $this->body->description->images->WeatherImage;
 		}
 
 		return $image_urls;

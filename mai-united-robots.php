@@ -112,7 +112,16 @@ final class Mai_United_Robots_Plugin {
 		foreach ( glob( MAI_UNITED_ROBOTS_PLUGIN_DIR . 'includes/*.php' ) as $file ) { include $file; }
 
 		// Register the autoloader.
-		spl_autoload_register( [ $this, 'autoload' ] );
+		// spl_autoload_register( [ $this, 'autoload' ] );
+
+		include MAI_UNITED_ROBOTS_PLUGIN_DIR . 'classes/class-endpoints.php';
+		include MAI_UNITED_ROBOTS_PLUGIN_DIR . 'classes/class-listener.php';
+		include MAI_UNITED_ROBOTS_PLUGIN_DIR . 'classes/class-hurricane.php';
+		include MAI_UNITED_ROBOTS_PLUGIN_DIR . 'classes/class-real-estate.php';
+		include MAI_UNITED_ROBOTS_PLUGIN_DIR . 'classes/class-weather.php';
+
+		// Load classes.
+		$endpoints = new Mai_United_Robots_Endpoints;
 	}
 
 	/**
@@ -126,7 +135,7 @@ final class Mai_United_Robots_Plugin {
 	 */
 	private function autoload( $class ) {
 		// If string doesn't start with 'Mai_United_Robots_'.
-		if ( 0 !== strpos( $class, 'Mai_United_Robots_' ) ) {
+		if ( ! str_starts_with( $class, 'Mai_United_Robots_' ) ) {
 			return;
 		}
 

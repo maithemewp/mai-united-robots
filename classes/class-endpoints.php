@@ -106,7 +106,7 @@ class Mai_United_Robots_Endpoints {
 		$header = $request->get_header( 'Authorization' );
 
 		// If the header is missing or it doesn't have the expected format.
-		if ( ! $header || 0 !== strpos( $header, 'Basic ' ) ) {
+		if ( ! $header || ! str_starts_with( $header, 'Basic ' ) ) {
 			return wp_send_json_error( 'Unauthorized request', 401 );
 		}
 
@@ -117,7 +117,7 @@ class Mai_United_Robots_Endpoints {
 		$credentials = base64_decode( $credentials );
 
 		// Split the credentials into username and password.
-		list( $username, $application_password ) = explode( ':', $credentials, 2 );
+		list( $username, $password ) = explode( ':', $credentials, 2 );
 
 		// Sanitize.
 		$username = sanitize_text_field( $username );
@@ -152,6 +152,6 @@ class Mai_United_Robots_Endpoints {
 		$this->body    = $body;
 
 		// Log the body.
-		mai_united_robots_logger( $this->body );
+		// mai_united_robots_logger( $this->body );
 	}
 }
