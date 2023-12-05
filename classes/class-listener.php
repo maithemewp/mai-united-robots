@@ -51,6 +51,9 @@ class Mai_United_Robots_Listener {
 			return;
 		}
 
+		// Save the body for reference.
+		update_post_meta( $this->post_id, 'unitedrobots_body', json_encode( $this->body ) );
+
 		// This should be overridden in child classes.
 		$this->process();
 
@@ -268,6 +271,9 @@ class Mai_United_Robots_Listener {
 			require_once( ABSPATH . 'wp-admin/includes/image.php' );
 		}
 
+		// Set the unitedrobots URL.
+		$unitedrobots_url = $image_url;
+
 		// Build a temp url.
 		$tmp = download_url( $image_url );
 
@@ -296,6 +302,9 @@ class Mai_United_Robots_Listener {
 
 		// Remove the original image.
 		@unlink( $file_array[ 'tmp_name' ] );
+
+		// Set the external url for possible reference later.
+		update_post_meta( $image_id, 'unitedrobots_url', $unitedrobots_url );
 
 		// Set image meta for allyinteractive block importer.
 		update_post_meta( $image_id, 'original_url', wp_get_attachment_image_url( $image_id, 'full' ) );
