@@ -11,6 +11,9 @@
  * 2. Set un/pw in wp-config.php via `MAI_UNITED_ROBOTS_AUTH_UN` and `MAI_UNITED_ROBOTS_AUTH_PW` constants.
  * 3. Copy the path to this file.
  * 4. Execute via command line: wp eval-file /Users/jivedig/Plugins/mai-united-robots/feeds/feed.php
+ *                              wp eval-file /home/maitwn01/domains/grandstrandlocal.com/public_html/wp-content/plugins/mai-united-robots/feeds/feed.php
+ *
+ * wp eval 'echo file_exists("/home/maitwn01/domains/grandstrandlocal.com/public_html/wp-content/plugins/mai-united-robots/feeds/feed.php") ? "File exists" : "File does not exist";'
  */
 
 $test = 'false';
@@ -18,9 +21,11 @@ $test = 'false';
 // $test     = 'weather';
 // $test     = 'hurricane';
 $url      = home_url( sprintf( '/wp-json/maiunitedrobots/v1/%s', $test ) );
-$file     = MAI_UNITED_ROBOTS_PLUGIN_DIR . 'feeds/' . $test . '-example.json';
+$file     = plugin_dir_path( __FILE__ ) . $test . '-example.json';
 $name     = defined( 'MAI_UNITED_ROBOTS_AUTH_UN' ) ? MAI_UNITED_ROBOTS_AUTH_UN : '';
 $password = defined( 'MAI_UNITED_ROBOTS_AUTH_PW' ) ? MAI_UNITED_ROBOTS_AUTH_PW : '';
+
+WP_CLI::log( 'Starting' );
 
 if ( ! $name ) {
 	WP_CLI::log( 'No name found via MAI_UNITED_ROBOTS_AUTH_UN constant.' );
@@ -72,4 +77,4 @@ if ( is_wp_error( $response ) ) {
 	WP_CLI::log( $code . ' : ' . $body );
 }
 
-WP_CLI::success( 'Done, okay.' );
+WP_CLI::success( 'Done' );
