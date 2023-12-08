@@ -34,11 +34,16 @@ class Mai_United_Robots_Listener {
 			wp_send_json_error( 'Missing title and content', 400 );
 		}
 
+		// Get BB user.
+		$user    = get_user_by( 'email', 'team@bizbudding.com' );
+		$user_id = $user ? $user->ID : 0;
+
 		// Insert the post.
 		$this->post_id = wp_insert_post(
 			[
 				'post_type'    => 'post',
 				'post_status'  => 'publish',
+				'post_author'  => $user_id,
 				'post_title'   => $title,
 				'post_content' => $this->handle_content( $content ),
 				'post_excerpt' => $excerpt,
