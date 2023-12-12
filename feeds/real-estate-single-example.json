@@ -1,0 +1,88 @@
+{
+	"format": "unitedrobots4",
+	"customer": {
+		"name": "Bizbudding US Real Estate"
+	},
+	"receiver": {
+		"name": "Bizbudding SC Real Estate Single Sales"
+	},
+	"article": {
+		"id": "lagfart-intl_153314994_2023-11-30",
+		"createdAt": "2023-12-11T03:31:27.082Z",
+		"generatedAt": "2023-12-11T03:31:27.082Z",
+		"type": "lagfart-intl",
+		"priority": 1,
+		"status": "changed",
+		"text": {
+			"title": "Single family residence in Pawleys Island sells for $1.4 million",
+			"bodyParts": [
+				"Bogdan Bienko and Annie Bienko recently purchased a 3,993-square-foot house built in 2010 from Family Revocable Trust Aj on Nov. 30, 2023, located at 53 Bald Cypress Court. The $1,400,000 purchase price represents a price per square foot of $351. This is a single-story house. The home's external structure has a hip roof design, covered with composition shingles. Inside, a fireplace adds character to the home. Additionally, the home includes an attached three-car garage.",
+				"FOOTER PLACEHOLDER"
+			]
+		}
+	},
+	"referenceId": 701231695,
+	"description": {
+		"id": "153314994_2023-11-30",
+		"zip": 29585,
+		"name": "53 Bald Cypress Court",
+		"size": 3993,
+		"tags": [
+			"Residential",
+			"Single Family Residence"
+		],
+		"type": "Residential",
+		"price": 1400000,
+		"subType": "Single Family Residence",
+		"district": "Georgetown",
+		"countyCode": "45043",
+		"embedImages": null,
+		"suitability": {
+			"zeroBedsZeroBaths": false
+		},
+		"geo": {
+			"latitude": 33.497958,
+			"longitude": -79.109065
+		},
+		"city": "Pawleys Island",
+		"state": "South Carolina",
+		"buyers": [
+			{
+				"name": "Bogdan Bienko",
+				"person": true,
+				"nameRaw": "BOGDAN BIENKO"
+			},
+			{
+				"name": "Annie Bienko",
+				"person": true,
+				"nameRaw": "ANNIE BIENKO"
+			}
+		],
+		"county": "Georgetown County",
+		"sellers": [
+			{
+				"name": {
+				"name": "Family Revocable Trust Aj",
+				"person": true,
+				"nameRaw": "AJ FAMILY REVOCABLE TRUST",
+				"lastName": "Aj",
+				"firstName": "Family Revocable Trust"
+			},
+				"nameRaw": "AJ FAMILY REVOCABLE TRUST"
+			}
+		],
+		"streetAddress": "Bald Cypress Court",
+		"addressAPStyle": "53  Bald Cypress Court, Unincorporated, SC",
+		"isAnyBuyerCompany": false,
+		"streetAddressFull": "53 Bald Cypress Court",
+		"isAnySellerCompany": false,
+		"streetAddressBlock": "first block of Bald Cypress Court",
+		"alternativeAddressFull": "53 Bald Cypress Court, Pawleys Island, SC",
+		"addressWithMunicipalityNoState": "53 Bald Cypress Court, Unincorporated",
+		"integrations": []
+	},
+	"sent": {
+		"first": "2023-12-11T03:31:31.279Z",
+		"latest": "2023-12-11T14:41:10.700Z"
+	}
+}
