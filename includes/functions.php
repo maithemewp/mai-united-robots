@@ -58,6 +58,17 @@ function mai_united_robots_test_endpoint() {
 }
 
 /**
+ * Gets author email.
+ *
+ * @since TBD
+ *
+ * @return string
+ */
+function mai_united_robots_get_author_email() {
+	return esc_email( apply_filters( 'mai_united_robots_author_email', 'newsdesk@grandstrandlocal.com' ) );
+}
+
+/**
  * Log data to a file.
  *
  * @since 0.1.0
