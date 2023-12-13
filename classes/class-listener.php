@@ -25,42 +25,74 @@ class Mai_United_Robots_Listener {
 	 * @return void
 	 */
 	function run() {
-		$title   = isset( $this->body->article->text->title ) ? $this->body->article->text->title : '';
-		$content = isset( $this->body->article->text->bodyParts ) ? $this->body->article->text->bodyParts : [];
-		$excerpt = isset( $this->body->description->seo->summary ) ? $this->body->description->seo->summary : '';
+		$update   = false;
+		$title    = isset( $this->body->article->text->title ) ? $this->body->article->text->title : '';
+		$content  = isset( $this->body->article->text->bodyParts ) ? $this->body->article->text->bodyParts : [];
+		$excerpt  = isset( $this->body->description->seo->summary ) ? $this->body->description->seo->summary : '';
 
 		// Bail if we don't have title and content.
 		if ( ! ( $title && $content ) ) {
 			wp_send_json_error( 'Missing title and content', 400 );
 		}
 
-		// Get default user.
-		$user    = get_user_by( 'email', 'newsdesk@grandstrandlocal.com' );
+		// Set default user.
+		$user    = get_user_by( 'email', mai_united_robots_get_author_email() );
 		$user_id = $user ? $user->ID : 0;
 
-		// Insert the post.
-		$this->post_id = wp_insert_post(
-			[
-				'post_type'    => 'post',
-				'post_status'  => 'publish',
-				'post_author'  => $user_id,
-				'post_title'   => $title,
-				'post_content' => $this->handle_content( $content ),
-				'post_excerpt' => $excerpt,
-				'meta_input'   => $this->get_meta(),
-			]
-		);
+		// Set post args.
+		$post_args = [
+			'post_type'    => 'post',
+			'post_status'  => 'publish',
+			'post_author'  => $user_id,
+			'post_title'   => $title,
+			'post_content' => $this->handle_content( $content ),
+			'post_excerpt' => $excerpt,
+			'meta_input'   => $this->get_meta(),
+		];
+
+		// Get article id.
+		$ref_id = isset( $body->article->id ) ? $body->article->id : '';
+
+		// If we have a reference id, get the post ID.
+		if ( $ref_id ) {
+			// Get post with a meta key of unitedrobots_id and meta value of the ref_id.
+			$existing = get_posts(
+				[
+					'post_type'    => 'post',
+					'meta_key'     => 'unitedrobots_id',
+					'meta_value'   => $ref_id,
+					'meta_compare' => '=',
+					'fields'       => 'ids',
+					'numberposts'  => 1,
+				]
+			);
+
+			// Get first.
+			$existing = $existing ? $existing[0] : 0;
+
+			// If we have an existing post, update it.
+			if ( $existing ) {
+				$update          = true;
+				$post_args['ID'] = $existing;
+			}
+		}
+
+		// Insert or update the post.
+		$this->post_id = wp_insert_post( $post_args );
 
 		// Bail if we don't have a post ID or there was an error.
 		if ( ! $this->post_id || is_wp_error( $this->post_id ) ) {
 			return;
 		}
 
-		// Save the body for reference.
-		update_post_meta( $this->post_id, 'unitedrobots_body', json_encode( $this->body ) );
+		// If not updating an existing post.
+		if ( ! $update ) {
+			// Save the body for reference.
+			update_post_meta( $this->post_id, 'unitedrobots_body', json_encode( $this->body ) );
 
-		// This should be overridden in child classes.
-		$this->process();
+			// This should be overridden in child classes.
+			$this->process();
+		}
 
 		// Handle images.
 		$this->handle_images();
@@ -132,6 +164,11 @@ class Mai_United_Robots_Listener {
 				continue;
 			}
 
+			// Skip if footer placeholder.
+			if ( 'FOOTER PLACEHOLDER' === trim( $item ) ) {
+				continue;
+			}
+
 			// Check if item already has an element.
 			$wrap = false;
 			$tags = new WP_HTML_Tag_Processor( $item );
@@ -162,7 +199,7 @@ class Mai_United_Robots_Listener {
 		$content = $this->before_process_content( $content );
 
 		// Convert to blocks.
-		if ( class_exists( 'Alley\WP\Block_Converter\Block_Converter' ) ) {
+		if ( ! has_blocks( $content ) && class_exists( 'Alley\WP\Block_Converter\Block_Converter' ) ) {
 			$converter = new Block_Converter( $content );
 			$content   = $converter->convert();
 		}
@@ -249,8 +286,8 @@ class Mai_United_Robots_Listener {
 		$meta = [];
 
 		// Reference ID.
-		if ( isset( $this->body->referenceId ) && ! empty( $this->body->referenceId ) ) {
-			$meta['reference_id'] = $this->body->referenceId;
+		if ( isset( $this->body->article->id ) && ! empty( $this->body->article->id ) ) {
+			$meta['reference_id'] = $this->body->article->id;
 		}
 
 		return $meta;
@@ -274,6 +311,22 @@ class Mai_United_Robots_Listener {
 			require_once( ABSPATH . 'wp-admin/includes/media.php' );
 			require_once( ABSPATH . 'wp-admin/includes/file.php' );
 			require_once( ABSPATH . 'wp-admin/includes/image.php' );
+		}
+
+		// Check if there is an attachment with unitedrobots_url meta key and value of $image_url.
+		$existing = get_posts(
+			[
+				'post_type'    => 'attachment',
+				'meta_key'     => 'unitedrobots_url',
+				'meta_value'   => $image_url,
+				'meta_compare' => '=',
+				'fields'       => 'ids',
+			]
+		);
+
+		// Bail if the image already exists.
+		if ( $existing ) {
+			return 0;
 		}
 
 		// Set the unitedrobots URL.
