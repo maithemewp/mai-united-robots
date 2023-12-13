@@ -33,10 +33,7 @@ final class Mai_United_Robots_Plugin {
 	 *
 	 * @since   0.1.0
 	 * @static  var array $instance
-	 * @uses    Mai_United_Robots_Plugin::setup_constants() Setup the constants needed.
-	 * @uses    Mai_United_Robots_Plugin::includes() Include the required files.
-	 * @uses    Mai_United_Robots_Plugin::hooks() Activate, deactivate, etc.
-	 * @see     Mai_United_Robots_Plugin()
+	 *
 	 * @return  object | Mai_United_Robots_Plugin The one true Mai_United_Robots_Plugin
 	 */
 	public static function instance() {
@@ -46,7 +43,7 @@ final class Mai_United_Robots_Plugin {
 			// Methods.
 			self::$instance->setup_constants();
 			self::$instance->includes();
-			self::$instance->hooks();
+			self::$instance->classes();
 		}
 		return self::$instance;
 	}
@@ -108,57 +105,28 @@ final class Mai_United_Robots_Plugin {
 		// Include vendor libraries.
 		require_once __DIR__ . '/vendor/autoload.php';
 
-		// Includes.
+		// Include files.
 		foreach ( glob( MAI_UNITED_ROBOTS_PLUGIN_DIR . 'includes/*.php' ) as $file ) { include $file; }
 
-		// Register the autoloader.
-		// spl_autoload_register( [ $this, 'autoload' ] );
-
+		// Include classes.
 		include MAI_UNITED_ROBOTS_PLUGIN_DIR . 'classes/class-endpoints.php';
 		include MAI_UNITED_ROBOTS_PLUGIN_DIR . 'classes/class-listener.php';
 		include MAI_UNITED_ROBOTS_PLUGIN_DIR . 'classes/class-hurricane.php';
 		include MAI_UNITED_ROBOTS_PLUGIN_DIR . 'classes/class-real-estate.php';
 		include MAI_UNITED_ROBOTS_PLUGIN_DIR . 'classes/class-weather.php';
-
-		// Load classes.
-		$endpoints = new Mai_United_Robots_Endpoints;
+		include MAI_UNITED_ROBOTS_PLUGIN_DIR . 'classes/class-cli.php';
 	}
 
 	/**
-	 * Autoload classes.
-	 *
-	 * @since 0.1.0
-	 *
-	 * @param string $class The class name.
-	 *
-	 * @return void
-	 */
-	private function autoload( $class ) {
-		// If string doesn't start with 'Mai_United_Robots_'.
-		if ( ! str_starts_with( $class, 'Mai_United_Robots_' ) ) {
-			return;
-		}
-
-		$name = str_replace( 'Mai_United_Robots_', '', $class );
-		$name = strtolower( str_replace( '_', '-', $name ) );
-		$file = MAI_UNITED_ROBOTS_PLUGIN_DIR . 'classes/class-' . $name . '.php';
-
-		if ( file_exists( $file ) ) {
-			include $file;
-		}
-	}
-
-	/**
-	 * Run the hooks.
+	 * Instantiate the classes.
 	 *
 	 * @since 0.1.0
 	 * @return void
 	 */
-	public function hooks() {
-		// Load classes.
+	public function classes() {
 		$endpoints = new Mai_United_Robots_Endpoints;
+		$cli       = new Mai_United_Robots_CLI;
 	}
-
 }
 
 /**
