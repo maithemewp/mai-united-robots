@@ -140,7 +140,7 @@ class Mai_United_Robots_Endpoints {
 		}
 
 		// Decode the body.
-		$body = json_decode( $body );
+		$body = mai_united_robots_json_decode( $body );
 
 		// Bail if no body.
 		if ( ! $body ) {

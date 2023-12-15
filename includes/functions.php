@@ -38,19 +38,18 @@ function mai_united_robots_test_endpoint() {
 	// Make the POST request.
 	$response = wp_remote_post( $url, $args );
 
-	ray( $response );
-
 	// Check if the request was successful
 	if ( is_wp_error( $response ) ) {
 		// Handle error
 		mai_united_robots_logger( 'Error: ' . $response->get_error_message() );
 	} else {
 		// Decode the response body
-		$response_body = json_decode( wp_remote_retrieve_body( $response ), true );
+		$body = wp_remote_retrieve_body( $response );
+		$body = mai_united_robots_json_decode( $body );
 
 		// Check the response
-		if ( isset( $response_body['message'] ) ) {
-			mai_united_robots_logger( 'Response: ' . $response_body['message'] );
+		if ( isset( $body['message'] ) ) {
+			mai_united_robots_logger( 'Response: ' . $body['message'] );
 		} else {
 			mai_united_robots_logger( 'Unexpected response format' );
 		}
@@ -65,7 +64,43 @@ function mai_united_robots_test_endpoint() {
  * @return string
  */
 function mai_united_robots_get_author_email() {
-	return esc_email( apply_filters( 'mai_united_robots_author_email', 'newsdesk@grandstrandlocal.com' ) );
+	return sanitize_email( apply_filters( 'mai_united_robots_author_email', 'newsdesk@grandstrandlocal.com' ) );
+}
+
+/**
+ * Decodes JSON string from united robots.
+ *
+ * @since TBD
+ *
+ * @param string $string
+ *
+ * @return array
+ */
+function mai_united_robots_json_decode( $string ) {
+	$string = mai_united_robots_maybe_add_slashes( $string );
+	$string = trim( $string, '""' );
+	$string = trim( $string, '"' );
+	return json_decode( $string, true );
+}
+
+/**
+ * Adds slashes to  double quotes within HTML attributes
+ * if they aren't already escaped.
+ *
+ * @since TBD
+ *
+ * @param string $string
+ *
+ * @return string
+ */
+function mai_united_robots_maybe_add_slashes( $string ) {
+	$fixed = preg_replace_callback('/<[^>]+>/', function( $matches ) {
+		$element = $matches[0];
+		$element = preg_replace( '/(?<!\\\\)"([^"]*)"/', '\\"$1\\"', $element );
+		return $element;
+	}, $string );
+
+	return $fixed ?: $string;
 }
 
 /**

@@ -18,6 +18,17 @@ class Mai_United_Robots_Listener {
 	}
 
 	/**
+	 * Get post ID.
+	 *
+	 * @since TBD
+	 *
+	 * @return int
+	 */
+	function get_post_id() {
+		return $this->post_id;
+	}
+
+	/**
 	 * Run the logic.
 	 *
 	 * @since 0.1.0
@@ -25,18 +36,20 @@ class Mai_United_Robots_Listener {
 	 * @return void
 	 */
 	function run() {
-		$update   = false;
-		$title    = isset( $this->body->article->text->title ) ? $this->body->article->text->title : '';
-		$content  = isset( $this->body->article->text->bodyParts ) ? $this->body->article->text->bodyParts : [];
-		$excerpt  = isset( $this->body->description->seo->summary ) ? $this->body->description->seo->summary : '';
+		$update  = false;
+		$title   = isset( $this->body['article']['text']['title'] ) ? $this->body['article']['text']['title'] : '';
+		$content = isset( $this->body['article']['text']['bodyParts'] ) ? $this->body['article']['text']['bodyParts'] : [];
+		$excerpt = isset( $this->body['description']['seo']['summary'] ) ? $this->body['description']['seo']['summary'] : '';
 
 		// Bail if we don't have title and content.
 		if ( ! ( $title && $content ) ) {
-			wp_send_json_error( 'Missing title and content', 400 );
+			// wp_send_json_error( 'Missing title and content', 400 );
+			return;
 		}
 
 		// Set default user.
-		$user    = get_user_by( 'email', mai_united_robots_get_author_email() );
+		$email   = mai_united_robots_get_author_email();
+		$user    = get_user_by( 'email', $email );
 		$user_id = $user ? $user->ID : 0;
 
 		// Set post args.
@@ -45,21 +58,30 @@ class Mai_United_Robots_Listener {
 			'post_status'  => 'publish',
 			'post_author'  => $user_id,
 			'post_title'   => $title,
-			'post_content' => $this->handle_content( $content ),
 			'post_excerpt' => $excerpt,
 			'meta_input'   => $this->get_meta(),
 		];
 
+		// Get times.
+		$published = isset( $this->body['sent']['first'] ) && $this->body['sent']['first'] ? $this->body['sent']['first'] : '';
+		$modified  = isset( $this->body['sent']['latest'] ) && $this->body['sent']['latest'] ? $this->body['sent']['latest'] : '';
+
+		// If published time.
+		if ( $published ) {
+			$datetime               = new DateTime( $published );
+			$post_args['post_date'] = $datetime->format( 'Y-m-d H:i:s' );
+		}
+
 		// Get article id.
-		$ref_id = isset( $body->article->id ) ? $body->article->id : '';
+		$ref_id = isset( $this->body['article']['id'] ) ? $this->body['article']['id'] : '';
 
 		// If we have a reference id, get the post ID.
 		if ( $ref_id ) {
-			// Get post with a meta key of unitedrobots_id and meta value of the ref_id.
+			// Get post with a meta key of reference_id and meta value of the ref_id.
 			$existing = get_posts(
 				[
 					'post_type'    => 'post',
-					'meta_key'     => 'unitedrobots_id',
+					'meta_key'     => 'reference_id',
 					'meta_value'   => $ref_id,
 					'meta_compare' => '=',
 					'fields'       => 'ids',
@@ -68,12 +90,18 @@ class Mai_United_Robots_Listener {
 			);
 
 			// Get first.
-			$existing = $existing ? $existing[0] : 0;
+			$existing = $existing && isset( $existing[0] ) ? $existing[0] : 0;
 
 			// If we have an existing post, update it.
 			if ( $existing ) {
 				$update          = true;
 				$post_args['ID'] = $existing;
+
+				// If modified time.
+				if ( $modified ) {
+					$datetime                   = new DateTime( $modified );
+					$post_args['post_modified'] = $datetime->format( 'Y-m-d H:i:s' );
+				}
 			}
 		}
 
@@ -85,10 +113,19 @@ class Mai_United_Robots_Listener {
 			return;
 		}
 
+		// Set post content. This runs after so we can attach images to the post ID.
+		$updated_id = wp_update_post(
+			[
+
+				'ID'           => $this->post_id,
+				'post_content' => $this->handle_content( $content ),
+			]
+		);
+
 		// If not updating an existing post.
 		if ( ! $update ) {
 			// Save the body for reference.
-			update_post_meta( $this->post_id, 'unitedrobots_body', json_encode( $this->body ) );
+			update_post_meta( $this->post_id, 'unitedrobots_body', wp_json_encode( $this->body ) );
 
 			// This should be overridden in child classes.
 			$this->process();
@@ -121,7 +158,8 @@ class Mai_United_Robots_Listener {
 		}
 
 		// Return success.
-		wp_send_json_success( 'Post ' . $this->post_id . ' imported successfully', 200 );
+		// $text = $update ? 'updated successfully' : 'imported successfully';
+		// wp_send_json_success( 'Post ' . $this->post_id . ' ' . $text, 200 );
 	}
 
 	/**
@@ -157,15 +195,19 @@ class Mai_United_Robots_Listener {
 	 * @return string The converted content.
 	 */
 	function handle_content( $content ) {
+		$list = false;
+
 		// Loop through content and add p tags to any empty items.
-		foreach ( $content as &$item ) {
-			// Skip if a placeholder.
-			if ( str_starts_with( $item, '{PLACEHOLDER' ) ) {
+		foreach ( $content as $index => $item ) {
+			// Skip if a placeholder. This was the old way of doing it, but some stored JSON may reference it still.
+			if ( str_starts_with( trim( $item ), '{PLACEHOLDER' ) ) {
 				continue;
 			}
 
 			// Skip if footer placeholder.
 			if ( 'FOOTER PLACEHOLDER' === trim( $item ) ) {
+				// Unset item from array.
+				unset( $content[ $index ] );
 				continue;
 			}
 
@@ -175,12 +217,76 @@ class Mai_United_Robots_Listener {
 
 			while ( $tags->next_tag() ) {
 				$wrap = true;
-				break;
+
+				// If it's an <img> tag.
+				if ( 'IMG' === $tags->get_tag() ) {
+					$src = $tags->get_attribute( 'src' );
+
+					// Skip if no src.
+					if ( ! $src ) {
+						continue;
+					}
+
+					// Skip if src already contains the home url.
+					if ( str_contains( home_url(), $src ) ) {
+						continue;
+					}
+
+					// Check if there is an existing image.
+					$existing_id = get_posts(
+						[
+							'post_type'    => 'attachment',
+							'meta_key'     => 'unitedrobots_url',
+							'meta_value'   => $src,
+							'meta_compare' => '=',
+							'fields'       => 'ids',
+						]
+					);
+
+					// If we have an existing image, use it.
+					if ( $existing_id && isset( $existing_id[0] ) ) {
+						$content[ $index ] = wp_get_attachment_image( $existing_id[0], 'large' );
+						continue;
+					}
+
+					// Upload the image.
+					$image_id = $this->upload_image( $src, $this->post_id );
+
+					// Skip if no image ID or error.
+					if ( ! $image_id || is_wp_error( $image_id ) ) {
+						continue;
+					}
+
+					$content[ $index ] = wp_get_attachment_image( $image_id, 'large' );
+					continue;
+				}
 			}
 
-			// If no wrap, add p tags.
+			// If no wrap.
 			if ( ! $wrap ) {
-				$item = "<p>{$item}</p>";
+				$html = '';
+
+				// If a faux-list.
+				if ( str_starts_with( $item, 'u00b7 ' ) ) {
+					$html = '';
+
+					if ( ! $list ) {
+						$html .= '<ul>';
+						$list  = true;
+					}
+
+					$content[ $index ] = sprintf( '%s<li>%s</li>', $html, str_replace( 'u00b7 ', '', $item ) );
+				}
+				// In a list, but this one is not a list item.
+				elseif ( $list ) {
+					$content[ $index - 1 ] .= '</ul>';
+					$content[ $index ]      = "<p>{$item}</p>";
+					$lits                   = false;
+				}
+				// Paragraph.
+				else {
+					$content[ $index ] = "<p>{$item}</p>";
+				}
 			}
 		}
 
@@ -286,8 +392,8 @@ class Mai_United_Robots_Listener {
 		$meta = [];
 
 		// Reference ID.
-		if ( isset( $this->body->article->id ) && ! empty( $this->body->article->id ) ) {
-			$meta['reference_id'] = $this->body->article->id;
+		if ( isset( $this->body['article']['id'] ) && ! empty( $this->body['article']['id'] ) ) {
+			$meta['reference_id'] = $this->body['article']['id'];
 		}
 
 		return $meta;
@@ -314,7 +420,7 @@ class Mai_United_Robots_Listener {
 		}
 
 		// Check if there is an attachment with unitedrobots_url meta key and value of $image_url.
-		$existing = get_posts(
+		$existing_id = get_posts(
 			[
 				'post_type'    => 'attachment',
 				'meta_key'     => 'unitedrobots_url',
@@ -325,7 +431,7 @@ class Mai_United_Robots_Listener {
 		);
 
 		// Bail if the image already exists.
-		if ( $existing ) {
+		if ( $existing_id ) {
 			return 0;
 		}
 

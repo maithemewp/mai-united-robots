@@ -26,10 +26,10 @@ class Mai_United_Robots_Weather_Listener extends Mai_United_Robots_Listener {
 	function get_image_urls() {
 		$image_urls = [];
 
-		if ( isset( $this->body->description->images->WeatherWarningImageHorizontal->url ) && ! empty( $this->body->description->images->WeatherWarningImageHorizontal->url ) ) {
-			$image_urls[] = $this->body->description->images->WeatherWarningImageHorizontal->url;
-		} elseif ( isset( $this->body->description->images->WeatherWarningImage->url ) && ! empty( $this->body->description->images->WeatherWarningImage->url ) ) {
-			$image_urls[] = $this->body->description->images->WeatherWarningImage->url;
+		if ( isset( $this->body['description']['images']['WeatherWarningImageHorizontal']['url'] ) && ! empty( $this->body['description']['images']['WeatherWarningImageHorizontal']['url'] ) ) {
+			$image_urls[] = $this->body['description']['images']['WeatherWarningImageHorizontal']['url'];
+		} elseif ( isset( $this->body['description']['images']['WeatherWarningImage']['url'] ) && ! empty( $this->body['description']['images']['WeatherWarningImage']['url'] ) ) {
+			$image_urls[] = $this->body['description']['images']['WeatherWarningImage']['url'];
 		}
 
 		return $image_urls;
@@ -53,12 +53,12 @@ class Mai_United_Robots_Weather_Listener extends Mai_United_Robots_Listener {
 				return '';
 			}
 
-			if ( ! isset( $this->body->description->images->{$matches[1]}->url ) || empty( $this->body->description->images->{$matches[1]}->url ) ) {
+			if ( ! isset( $this->body['description']['images'][$matches[1]]['url'] ) || empty( $this->body['description']['images'][$matches[1]]['url'] ) ) {
 				return '';
 			}
 
 			// Upload image to media library.
-			$image_id = $this->upload_image( $this->body->description->images->{$matches[1]}->url, $this->post_id );
+			$image_id = $this->upload_image( $this->body['description']['images'][$matches[1]]['url'], $this->post_id );
 
 			// Bail if no image ID or error.
 			if ( ! $image_id || is_wp_error( $image_id ) ) {
