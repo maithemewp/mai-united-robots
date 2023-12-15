@@ -20,7 +20,7 @@ class Mai_United_Robots_Listener {
 	/**
 	 * Get post ID.
 	 *
-	 * @since TBD
+	 * @since 0.2.0
 	 *
 	 * @return int
 	 */

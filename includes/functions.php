@@ -59,7 +59,7 @@ function mai_united_robots_test_endpoint() {
 /**
  * Gets author email.
  *
- * @since TBD
+ * @since 0.2.0
  *
  * @return string
  */
@@ -70,7 +70,7 @@ function mai_united_robots_get_author_email() {
 /**
  * Decodes JSON string from united robots.
  *
- * @since TBD
+ * @since 0.2.0
  *
  * @param string $string
  *
@@ -87,7 +87,7 @@ function mai_united_robots_json_decode( $string ) {
  * Adds slashes to  double quotes within HTML attributes
  * if they aren't already escaped.
  *
- * @since TBD
+ * @since 0.2.0
  *
  * @param string $string
  *

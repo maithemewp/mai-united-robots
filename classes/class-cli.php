@@ -28,7 +28,7 @@ class Mai_United_Robots_CLI {
 	 *
 	 * Usage: wp maiunitedrobots get_environment
 	 *
-	 * @since TBD
+	 * @since 0.2.0
 	 *
 	 * @return void
 	 */
@@ -41,7 +41,7 @@ class Mai_United_Robots_CLI {
 	 *
 	 * Usage: wp maiunitedrobots update_json --post_type=post --posts_per_page=10 --offset=0
 	 *
-	 * @since TBD
+	 * @since 0.2.0
 	 *
 	 * @param array $args       Standard command args.
 	 * @param array $assoc_args Keyed args like --posts_per_page and --offset.
@@ -125,7 +125,7 @@ class Mai_United_Robots_CLI {
 	 *
 	 * Usage: wp maiunitedrobots update_ids --post_type=post --posts_per_page=10 --offset=0
 	 *
-	 * @since TBD
+	 * @since 0.2.0
 	 *
 	 * @param array $args       Standard command args.
 	 * @param array $assoc_args Keyed args like --posts_per_page and --offset.
@@ -240,7 +240,7 @@ class Mai_United_Robots_CLI {
 	 *
 	 * Usage: wp maiunitedrobots update_posts --post_type=post --posts_per_page=10 --offset=0
 	 *
-	 * @since TBD
+	 * @since 0.2.0
 	 *
 	 * @param array $args       Standard command args.
 	 * @param array $assoc_args Keyed args like --posts_per_page and --offset.
