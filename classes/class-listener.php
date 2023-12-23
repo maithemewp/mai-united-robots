@@ -266,8 +266,11 @@ class Mai_United_Robots_Listener {
 			if ( ! $wrap ) {
 				$html = '';
 
+				$one = str_starts_with( $item, 'u00b7 ' );
+				$two = str_starts_with( $item, '• ' );
+
 				// If a faux-list.
-				if ( str_starts_with( $item, 'u00b7 ' ) ) {
+				if ( $one || $two ) {
 					$html = '';
 
 					if ( ! $list ) {
@@ -275,7 +278,8 @@ class Mai_United_Robots_Listener {
 						$list  = true;
 					}
 
-					$content[ $index ] = sprintf( '%s<li>%s</li>', $html, str_replace( 'u00b7 ', '', $item ) );
+					$replace           = $one ? 'u00b7 ' : '• ';
+					$content[ $index ] = sprintf( '%s<li>%s</li>', $html, str_replace( $replace, '', $item ) );
 				}
 				// In a list, but this one is not a list item.
 				elseif ( $list ) {
