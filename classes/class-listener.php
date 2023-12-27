@@ -44,7 +44,7 @@ class Mai_United_Robots_Listener {
 		// Bail if we don't have title and content.
 		if ( ! ( $title && $content ) ) {
 			mai_united_robots_logger( 'Missing title and content' );
-			return;
+			return wp_send_json_error( 'Missing title and content' );
 		}
 
 		// Set default user.
@@ -115,8 +115,10 @@ class Mai_United_Robots_Listener {
 		if ( ! $this->post_id || is_wp_error( $this->post_id ) ) {
 			if ( is_wp_error( $this->post_id ) ) {
 				mai_united_robots_logger( $this->post_id->get_error_message() );
+				return wp_send_json_error( $this->post_id->get_error_message() );
 			}
-			return;
+
+			return wp_send_json_error( 'Failed during wp_insert_post()' );
 		}
 
 		// Set post content. This runs after so we can attach images to the post ID.
