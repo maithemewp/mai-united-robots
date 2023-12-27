@@ -77,9 +77,9 @@ function mai_united_robots_get_author_email() {
  * @return array
  */
 function mai_united_robots_json_decode( $string ) {
-	$string = mai_united_robots_maybe_add_slashes( $string );
-	$string = trim( $string, '""' );
-	$string = trim( $string, '"' );
+	// $string = mai_united_robots_maybe_add_slashes( $string );
+	// $string = trim( $string, '""' );
+	// $string = trim( $string, '"' );
 	return json_decode( $string, true );
 }
 
