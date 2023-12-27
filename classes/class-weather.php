@@ -53,6 +53,10 @@ class Mai_United_Robots_Weather_Listener extends Mai_United_Robots_Listener {
 				return '';
 			}
 
+			if ( ! isset( $this->body['description']['images'] ) ) {
+				return '';
+			}
+
 			if ( ! isset( $this->body['description']['images'][$matches[1]]['url'] ) || empty( $this->body['description']['images'][$matches[1]]['url'] ) ) {
 				return '';
 			}
