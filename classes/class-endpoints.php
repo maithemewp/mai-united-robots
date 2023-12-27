@@ -134,16 +134,10 @@ class Mai_United_Robots_Endpoints {
 		// Get the request body.
 		$body = $request->get_body();
 
-		// Log the body.
-		mai_united_robots_logger( $body );
-
 		// Bail if no body.
 		if ( ! $body ) {
 			return wp_send_json_error( 'No body', 400 );
 		}
-
-		// Decode the body.
-		$body = mai_united_robots_json_decode( $body );
 
 		// Log decoded body.
 		mai_united_robots_logger( $body );

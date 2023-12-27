@@ -100,10 +100,11 @@ class Mai_United_Robots_Listener {
 				$update          = true;
 				$post_args['ID'] = $existing;
 
-				// If modified time.
+				// If modified time, update the post date so it shows up higher.
 				if ( $modified ) {
 					$datetime                   = new DateTime( $modified );
-					$post_args['post_modified'] = $datetime->format( 'Y-m-d H:i:s' );
+					$post_args['post_date']     = $datetime->format( 'Y-m-d H:i:s' );
+					// $post_args['post_modified'] = $datetime->format( 'Y-m-d H:i:s' );
 				}
 			}
 		}
@@ -114,8 +115,8 @@ class Mai_United_Robots_Listener {
 		// Bail if we don't have a post ID or there was an error.
 		if ( ! $this->post_id || is_wp_error( $this->post_id ) ) {
 			if ( is_wp_error( $this->post_id ) ) {
-				mai_united_robots_logger( $this->post_id->get_error_message() );
-				return wp_send_json_error( $this->post_id->get_error_message() );
+				mai_united_robots_logger( $this->post_id->get_error_code() . ': ' . $this->post_id->get_error_message() );
+				return wp_send_json_error( $this->post_id->get_error_message(), $this->post_id->get_error_code() );
 			}
 
 			return wp_send_json_error( 'Failed during wp_insert_post()' );
@@ -375,7 +376,6 @@ class Mai_United_Robots_Listener {
 
 			// Skip if no image ID or error.
 			if ( ! $image_id || is_wp_error( $image_id ) ) {
-				mai_united_robots_logger( $image_id->get_error_message() );
 				continue;
 			}
 
@@ -457,7 +457,7 @@ class Mai_United_Robots_Listener {
 
 		// Bail if error.
 		if ( is_wp_error( $tmp ) ) {
-			mai_united_robots_logger( 'upload_image() 1 ' . $tmp->get_error_message() );
+			mai_united_robots_logger( $tmp->get_error_code() . ': upload_image() 1 ' . $tmp->get_error_message() );
 
 			// Remove the original image and return the error.
 			@unlink( $tmp );
@@ -475,7 +475,7 @@ class Mai_United_Robots_Listener {
 
 		// Bail if error.
 		if ( is_wp_error( $image_id ) ) {
-			mai_united_robots_logger( 'upload_image() 2 ' . $image_id->get_error_message() );
+			mai_united_robots_logger( $tmp->get_error_code() . ': upload_image() 2 ' . $tmp->get_error_message() );
 
 			// Remove the original image and return the error.
 			@unlink( $file_array[ 'tmp_name' ] );
