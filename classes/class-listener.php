@@ -201,6 +201,8 @@ class Mai_United_Robots_Listener {
 
 		// Loop through content and add p tags to any empty items.
 		foreach ( $content as $index => $item ) {
+			mai_united_robots_logger( $item );
+
 			// Skip if a placeholder. This was the old way of doing it, but some stored JSON may reference it still.
 			// if ( str_starts_with( trim( $item ), '{PLACEHOLDER' ) ) {
 			// 	continue;
