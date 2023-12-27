@@ -89,6 +89,9 @@ class Mai_United_Robots_Listener {
 				]
 			);
 
+			mai_united_robots_logger( 'get_posts()' );
+			mai_united_robots_logger( $existing );
+
 			// Get first.
 			$existing = $existing && isset( $existing[0] ) ? $existing[0] : 0;
 
@@ -110,7 +113,9 @@ class Mai_United_Robots_Listener {
 
 		// Bail if we don't have a post ID or there was an error.
 		if ( ! $this->post_id || is_wp_error( $this->post_id ) ) {
-			mai_united_robots_logger( $this->post_id->get_error_message() );
+			if ( is_wp_error( $this->post_id ) ) {
+				mai_united_robots_logger( $this->post_id->get_error_message() );
+			}
 			return;
 		}
 
