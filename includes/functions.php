@@ -113,9 +113,23 @@ function mai_united_robots_maybe_add_slashes( $string ) {
  * @return void
  */
 function mai_united_robots_logger( $data ) {
-	$file   = MAI_UNITED_ROBOTS_PLUGIN_DIR . 'debug.txt';
-	$handle = fopen( $file, 'a' );
+	if ( ! defined( 'WP_DEBUG' ) || true !== WP_DEBUG ) {
+		return;
+	}
+
+	if ( ! defined( 'WP_DEBUG_LOG' ) || true !== WP_DEBUG_LOG ) {
+		return;
+	}
+
+	$date    = date( 'Y-m-d H:i:s' );
+	$uploads = wp_get_upload_dir();
+	$file    = $uploads['basedir'] . '/mai-united-robots/debug.txt';
+	$handle  = fopen( $file, 'a' );
+
 	ob_start();
+
+	echo $date . "\r\n";
+
 	if ( is_array( $data ) || is_object( $data ) ) {
 		print_r( $data );
 	} elseif ( is_bool( $data ) ) {
@@ -123,6 +137,7 @@ function mai_united_robots_logger( $data ) {
 	} else {
 		echo $data;
 	}
+
 	echo "\r\n\r\n";
 	fwrite( $handle, ob_get_clean() );
 	fclose( $handle );
