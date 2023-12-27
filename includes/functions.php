@@ -123,8 +123,13 @@ function mai_united_robots_logger( $data ) {
 
 	$date    = date( 'Y-m-d H:i:s' );
 	$uploads = wp_get_upload_dir();
-	$file    = $uploads['basedir'] . '/mai-united-robots/debug.txt';
-	$handle  = fopen( $file, 'a' );
+
+	if ( ! is_dir( $uploads['basedir'] . '/mai-united-robots' ) ) {
+		wp_mkdir_p( $uploads['basedir'] . '/mai-united-robots' );
+	}
+
+	$file   = $uploads['basedir'] . '/mai-united-robots/debug.txt';
+	$handle = fopen( $file, 'a' );
 
 	ob_start();
 
