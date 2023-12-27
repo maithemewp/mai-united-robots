@@ -134,8 +134,7 @@ class Mai_United_Robots_Listener {
 		// If not updating an existing post.
 		if ( ! $update ) {
 			// Save the body for reference.
-			// update_post_meta( $this->post_id, 'unitedrobots_body', wp_json_encode( $this->body ) );
-			update_post_meta( $this->post_id, 'unitedrobots_body', $this->body );
+			update_post_meta( $this->post_id, 'unitedrobots_body', wp_json_encode( $this->body ) );
 
 			// This should be overridden in child classes.
 			$this->process();
