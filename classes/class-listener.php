@@ -167,8 +167,8 @@ class Mai_United_Robots_Listener {
 		}
 
 		// Return success.
-		// $text = $update ? 'updated successfully' : 'imported successfully';
-		// wp_send_json_success( 'Post ' . $this->post_id . ' ' . $text, 200 );
+		$text = $update ? 'updated successfully' : 'imported successfully';
+		wp_send_json_success( 'Post ' . $this->post_id . ' ' . $text, 200 );
 	}
 
 	/**
