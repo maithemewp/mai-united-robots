@@ -100,11 +100,11 @@ class Mai_United_Robots_Listener {
 				$update          = true;
 				$post_args['ID'] = $existing;
 
-				// If modified time, update the post date so it shows up higher.
+				// If modified time.
 				if ( $modified ) {
 					$datetime                   = new DateTime( $modified );
-					$post_args['post_date']     = $datetime->format( 'Y-m-d H:i:s' );
-					// $post_args['post_modified'] = $datetime->format( 'Y-m-d H:i:s' );
+					// $post_args['post_date']     = $datetime->format( 'Y-m-d H:i:s' );
+					$post_args['post_modified'] = $datetime->format( 'Y-m-d H:i:s' );
 				}
 			}
 		}
