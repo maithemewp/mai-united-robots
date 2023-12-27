@@ -201,12 +201,10 @@ class Mai_United_Robots_Listener {
 
 		// Loop through content and add p tags to any empty items.
 		foreach ( $content as $index => $item ) {
-			mai_united_robots_logger( $item );
-
 			// Skip if a placeholder. This was the old way of doing it, but some stored JSON may reference it still.
-			// if ( str_starts_with( trim( $item ), '{PLACEHOLDER' ) ) {
-			// 	continue;
-			// }
+			if ( str_starts_with( trim( $item ), '{PLACEHOLDER' ) ) {
+				continue;
+			}
 
 			// Skip if footer placeholder.
 			if ( 'FOOTER PLACEHOLDER' === trim( $item ) ) {
@@ -452,7 +450,7 @@ class Mai_United_Robots_Listener {
 
 		// Bail if error.
 		if ( is_wp_error( $tmp ) ) {
-			mai_united_robots_logger( $tmp->get_error_message() );
+			mai_united_robots_logger( 'upload_image() 1 ' . $tmp->get_error_message() );
 
 			// Remove the original image and return the error.
 			@unlink( $tmp );
@@ -470,7 +468,7 @@ class Mai_United_Robots_Listener {
 
 		// Bail if error.
 		if ( is_wp_error( $image_id ) ) {
-			mai_united_robots_logger( $image_id->get_error_message() );
+			mai_united_robots_logger( 'upload_image() 2 ' . $image_id->get_error_message() );
 
 			// Remove the original image and return the error.
 			@unlink( $file_array[ 'tmp_name' ] );
