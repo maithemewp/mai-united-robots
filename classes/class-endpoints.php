@@ -145,6 +145,9 @@ class Mai_United_Robots_Endpoints {
 		// Decode the body.
 		$body = mai_united_robots_json_decode( $body );
 
+		// Log decoded body.
+		mai_united_robots_logger( $body );
+
 		// Bail if no body.
 		if ( ! $body ) {
 			return wp_send_json_error( 'No decoded body', 400 );
