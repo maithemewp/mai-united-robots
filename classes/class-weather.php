@@ -26,11 +26,11 @@ class Mai_United_Robots_Weather_Listener extends Mai_United_Robots_Listener {
 	function get_image_urls() {
 		$image_urls = [];
 
-		if ( isset( $this->body['description']['images']['WeatherWarningImageHorizontal']['url'] ) && ! empty( $this->body['description']['images']['WeatherWarningImageHorizontal']['url'] ) ) {
-			$image_urls[] = $this->body['description']['images']['WeatherWarningImageHorizontal']['url'];
-		} elseif ( isset( $this->body['description']['images']['WeatherWarningImage']['url'] ) && ! empty( $this->body['description']['images']['WeatherWarningImage']['url'] ) ) {
-			$image_urls[] = $this->body['description']['images']['WeatherWarningImage']['url'];
-		}
+		// if ( isset( $this->body['description']['images']['WeatherWarningImageHorizontal']['url'] ) && ! empty( $this->body['description']['images']['WeatherWarningImageHorizontal']['url'] ) ) {
+		// 	$image_urls[] = $this->body['description']['images']['WeatherWarningImageHorizontal']['url'];
+		// } elseif ( isset( $this->body['description']['images']['WeatherWarningImage']['url'] ) && ! empty( $this->body['description']['images']['WeatherWarningImage']['url'] ) ) {
+		// 	$image_urls[] = $this->body['description']['images']['WeatherWarningImage']['url'];
+		// }
 
 		return $image_urls;
 	}
@@ -44,6 +44,9 @@ class Mai_United_Robots_Weather_Listener extends Mai_United_Robots_Listener {
 	 * @return string
 	 */
 	function before_process_content( $content ) {
+
+		return $content;
+
 		// Define the pattern to match the placeholders and extract the URLs.
 		$pattern = '/{PLACEHOLDER:IMAGE_(.*?)}/';
 
