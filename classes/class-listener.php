@@ -13,7 +13,7 @@ class Mai_United_Robots_Listener {
 	 * Construct the class.
 	 */
 	function __construct( $body ) {
-		$this->body = $body;
+		$this->body = is_string( $body ) ? json_decode( $body, true ) : $body;
 		$this->run();
 	}
 
