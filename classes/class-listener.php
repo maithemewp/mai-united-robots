@@ -113,6 +113,10 @@ class Mai_United_Robots_Listener {
 		// Insert or update the post.
 		$this->post_id = wp_insert_post( $post_args );
 
+		// Log post data.
+		mai_united_robots_logger( $this->post_id );
+		mai_united_robots_logger( $post_args );
+
 		// Bail if we don't have a post ID or there was an error.
 		if ( ! $this->post_id || is_wp_error( $this->post_id ) ) {
 			if ( is_wp_error( $this->post_id ) ) {
