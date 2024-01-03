@@ -285,33 +285,44 @@ class Mai_United_Robots_Listener {
 
 			// If no wrap.
 			if ( ! $wrap ) {
-				$html = '';
+				// $html = '';
 
-				$one = str_starts_with( $item, 'u00b7 ' );
-				$two = str_starts_with( $item, '• ' );
+				// $one = str_starts_with( $item, 'u00b7 ' ) || str_starts_with( $item, 'u2022 ' );
+				// $two = str_starts_with( $item, '• ' );
 
-				// If a faux-list.
-				if ( $one || $two ) {
-					$html = '';
+				// // If a faux-list.
+				// if ( $one || $two ) {
+				// 	$html = '';
 
-					if ( ! $list ) {
-						$html .= '<ul>';
-						$list  = true;
-					}
+				// 	if ( ! $list ) {
+				// 		$html .= '<ul>';
+				// 		$list  = true;
+				// 	}
 
-					$replace           = $one ? 'u00b7 ' : '• ';
-					$content[ $index ] = sprintf( '%s<li>%s</li>', $html, str_replace( $replace, '', $item ) );
-				}
-				// In a list, but this one is not a list item.
-				elseif ( $list ) {
-					$content[ $index - 1 ] .= '</ul>';
-					$content[ $index ]      = "<p>{$item}</p>";
-					$lits                   = false;
-				}
-				// Paragraph.
-				else {
-					$content[ $index ] = "<p>{$item}</p>";
-				}
+				// 	if ( $one ) {
+				// 		$item = str_replace( 'u00b7 ', '', $item );
+				// 		$item = str_replace( 'u2022 ', '', $item );
+				// 	} else {
+				// 		$item = str_replace( '• ', '', $item );
+				// 	}
+
+				// 	$content[ $index ] = sprintf( '%s<li>%s</li>', $html, $item );
+				// }
+				// // In a list, but this one is not a list item.
+				// elseif ( $list ) {
+				// 	$content[ $index - 1 ] .= '</ul>';
+				// 	$content[ $index ]      = "<p>{$item}</p>";
+				// 	$lits                   = false;
+				// }
+				// // Paragraph.
+				// else {
+				// 	$content[ $index ] = "<p>{$item}</p>";
+				// }
+
+				$item              = str_replace( 'u00b7 ', '', $item );
+				$item              = str_replace( 'u2022 ', '', $item );
+				$item              = str_replace( '• ', '', $item );
+				$content[ $index ] = "<p>{$item}</p>";
 			}
 		}
 
