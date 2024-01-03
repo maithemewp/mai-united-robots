@@ -67,6 +67,10 @@ class Mai_United_Robots_CLI {
 			'update_post_term_cache' => false,
 		] );
 
+		if ( isset( $args['post__in'] ) ) {
+			$args['post__in'] = explode( ',', $args['post__in'] );
+		}
+
 		$query = new WP_Query( $args );
 
 		if ( $query->have_posts() ) {
@@ -171,6 +175,10 @@ class Mai_United_Robots_CLI {
 			'update_post_term_cache' => false,
 		] );
 
+		if ( isset( $args['post__in'] ) ) {
+			$args['post__in'] = explode( ',', $args['post__in'] );
+		}
+
 		$query = new WP_Query( $args );
 
 		if ( $query->have_posts() ) {
@@ -242,6 +250,10 @@ class Mai_United_Robots_CLI {
 			'update_post_meta_cache' => false,
 			'update_post_term_cache' => false,
 		] );
+
+		if ( isset( $args['post__in'] ) ) {
+			$args['post__in'] = explode( ',', $args['post__in'] );
+		}
 
 		$query = new WP_Query( $args );
 
