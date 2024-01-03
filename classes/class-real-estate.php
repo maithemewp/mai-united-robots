@@ -14,8 +14,22 @@ class Mai_United_Robots_Real_Estate_Listener extends Mai_United_Robots_Listener 
 	 * @return void
 	 */
 	function process() {
+		$category = __( 'Real Estate', 'mai-united-robots' );
+		$tag      = false;
+
+		if ( isset( $this->body['description']['city'] ) ) {
+			$tag = $this->body['description']['city'];
+		} elseif ( isset( $this->body['description']['zipGroup'] ) ) {
+			$tag = $this->body['description']['zipGroup'];
+		}
+
 		// Add (or create then add) the category.
-		wp_set_object_terms( $this->post_id, __( 'Real Estate', 'mai-united-robots' ), 'category', false );
+		wp_set_object_terms( $this->post_id, $category, 'category', $append = false );
+
+		// Add (or create then add) the tag.
+		if ( $tag ) {
+			wp_set_object_terms( $this->post_id, sanitize_text_field( $tag ), 'post_tag', $append = true );
+		}
 	}
 
 	/**

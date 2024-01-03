@@ -13,7 +13,7 @@ class Mai_United_Robots_Weather_Listener extends Mai_United_Robots_Listener {
 	 */
 	function process() {
 		// Add (or create then add) the category.
-		wp_set_object_terms( $this->post_id, __( 'Weather', 'mai-united-robots' ), 'category', false );
+		wp_set_object_terms( $this->post_id, __( 'Weather', 'mai-united-robots' ), 'category', $append = false );
 	}
 
 	/**
