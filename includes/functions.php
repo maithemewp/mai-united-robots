@@ -77,30 +77,14 @@ function mai_united_robots_get_author_email() {
  * @return array
  */
 function mai_united_robots_json_decode( $string ) {
-	// $string = mai_united_robots_maybe_add_slashes( $string );
-	// $string = trim( $string, '""' );
-	// $string = trim( $string, '"' );
+	$string = trim( $string, '""' );
+	$string = trim( $string, '"' );
+	$string = str_replace( ' "', ' \"', $string );
+	$string = str_replace( '" ', '\" ', $string );
+	$string = str_replace( '"",', '\"",', $string );
+	$string = str_replace( ',""', ',"\"', $string );
+
 	return json_decode( $string, true );
-}
-
-/**
- * Adds slashes to  double quotes within HTML attributes
- * if they aren't already escaped.
- *
- * @since 0.2.0
- *
- * @param string $string
- *
- * @return string
- */
-function mai_united_robots_maybe_add_slashes( $string ) {
-	$fixed = preg_replace_callback('/<[^>]+>/', function( $matches ) {
-		$element = $matches[0];
-		$element = preg_replace( '/(?<!\\\\)"([^"]*)"/', '\\"$1\\"', $element );
-		return $element;
-	}, $string );
-
-	return $fixed ?: $string;
 }
 
 /**
