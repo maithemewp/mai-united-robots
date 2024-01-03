@@ -14,21 +14,29 @@ class Mai_United_Robots_Real_Estate_Listener extends Mai_United_Robots_Listener 
 	 * @return void
 	 */
 	function process() {
-		$category = __( 'Real Estate', 'mai-united-robots' );
+		$category = __( 'real-estate', 'mai-united-robots' );
+		$child    = false;
 		$tag      = false;
 
+		// Maybe get child term and tag.
 		if ( isset( $this->body['description']['city'] ) ) {
-			$tag = $this->body['description']['city'];
+			$child = __( 'sold', 'mai-united-robots' );
+			$tag   = $this->body['description']['city'];
 		} elseif ( isset( $this->body['description']['zipGroup'] ) ) {
-			$tag = $this->body['description']['zipGroup'];
+			$tag   = $this->body['description']['zipGroup'];
 		}
 
 		// Add (or create then add) the category.
-		wp_set_object_terms( $this->post_id, $category, 'category', $append = false );
+		wp_set_object_terms( $this->post_id, $category, 'category', $append = true );
 
-		// Add (or create then add) the tag.
-		if ( $tag ) {
-			wp_set_object_terms( $this->post_id, sanitize_text_field( $tag ), 'post_tag', $append = true );
+		// Maybe add a child category.
+		if ( $child ) {
+			wp_set_post_terms( $this->post_id, $child, 'category', $append = true );
+		}
+
+		// Maybe add a tag.
+		if ( $child ) {
+			wp_set_post_terms( $this->post_id, $tag, 'post_tag', $append = true );
 		}
 	}
 
