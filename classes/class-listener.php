@@ -9,6 +9,8 @@ class Mai_United_Robots_Listener {
 	protected $body;
 	protected $return_json;
 	protected $post_id;
+	protected $modified;
+	protected $modified_gmt;
 
 	/**
 	 * Construct the class.
@@ -66,6 +68,9 @@ class Mai_United_Robots_Listener {
 			'meta_input'   => $this->get_meta(),
 		];
 
+		// Force modified time.
+		add_action( 'wp_insert_post_data', [ $this, 'force_modified_date' ], 20, 2 );
+
 		// Get times.
 		$published  = isset( $this->body['sent']['first'] ) && $this->body['sent']['first'] ? $this->body['sent']['first'] : '';
 		$modified   = isset( $this->body['sent']['latest'] ) && $this->body['sent']['latest'] ? $this->body['sent']['latest'] : '';
@@ -73,11 +78,8 @@ class Mai_United_Robots_Listener {
 
 		// If published time.
 		if ( $published ) {
-			// Create a DateTime object with the modified time and adjust for GMT offset.
-			$datetime = new DateTime( $published );
-			$datetime->modify( "{$gmt_offset} seconds" );
-
-			$post_args['post_date'] = $datetime->format( 'Y-m-d H:i:s' );
+			$published              = date( 'Y-m-d H:i:s', strtotime( $published ) );
+			$post_args['post_date'] = $published;
 		}
 
 		// Get article id.
@@ -110,12 +112,9 @@ class Mai_United_Robots_Listener {
 
 				// If modified time.
 				if ( $modified ) {
-					// Create a DateTime object with the modified time and adjust for GMT offset.
-					$datetime = new DateTime( $modified );
-					$datetime->modify( "{$gmt_offset} seconds" );
-
-					// Set the post_modified field with the adjusted timestamp.
-					$post_args['post_modified'] = $datetime->format( 'Y-m-d H:i:s' );
+					$this->modified = date( 'Y-m-d H:i:s', strtotime( $modified ) );
+				} elseif ( $published ) {
+					$this->modified = date( 'Y-m-d H:i:s', strtotime( $published ) );
 				}
 			}
 		}
@@ -141,7 +140,6 @@ class Mai_United_Robots_Listener {
 		// Set post content. This runs after so we can attach images to the post ID.
 		$updated_id = wp_update_post(
 			[
-
 				'ID'           => $this->post_id,
 				'post_content' => $this->handle_content( $content ),
 			]
@@ -186,6 +184,25 @@ class Mai_United_Robots_Listener {
 		$text = $update ? 'updated successfully' : 'imported successfully';
 
 		return $this->send_json_success( 'Post ' . $this->post_id . ' ' . $text, 200 );
+	}
+
+	/**
+	 * Use modified date from JSON.
+	 *
+	 * @since 0.3.0
+	 *
+	 * @param array $data Slashed post data.
+	 * @param array $postarr Raw post data.
+	 *
+	 * @return array Slashed post data with modified post_modified and post_modified_gmt.
+	 */
+	function force_modified_date( $data, $postarr ) {
+		if ( $this->modified ) {
+			$data['post_modified']     = date( 'Y-m-d H:i:s', strtotime( $this->modified ) );
+			$data['post_modified_gmt'] = get_gmt_from_date( $data['post_modified'] );
+		}
+
+		return $data;
 	}
 
 	/**
