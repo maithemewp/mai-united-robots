@@ -67,9 +67,12 @@ class Mai_United_Robots_Listener {
 		];
 
 		// Get times.
-		$published  = isset( $this->body['sent']['first'] ) && $this->body['sent']['first'] ? $this->body['sent']['first'] : '';
-		$modified   = isset( $this->body['sent']['latest'] ) && $this->body['sent']['latest'] ? $this->body['sent']['latest'] : '';
-		$gmt_offset = get_option( 'gmt_offset' ) * 3600;
+		$published           = isset( $this->body['sent']['first'] ) && $this->body['sent']['first'] ? $this->body['sent']['first'] : '';
+		$modified            = isset( $this->body['sent']['latest'] ) && $this->body['sent']['latest'] ? $this->body['sent']['latest'] : '';
+		$gmt_offset          = get_option( 'gmt_offset' ) * 3600;
+		$published_formatted = false;
+		$modified_formatted  = false;
+		$existing            = false;
 
 		// If published time.
 		if ( $published ) {
@@ -77,7 +80,8 @@ class Mai_United_Robots_Listener {
 			$datetime = new DateTime( $published );
 			$datetime->modify( "{$gmt_offset} seconds" );
 
-			$post_args['post_date'] = $datetime->format( 'Y-m-d H:i:s' );
+			$published_formatted    = $datetime->format( 'Y-m-d H:i:s' );
+			$post_args['post_date'] = $published_formatted;
 		}
 
 		// Get article id.
@@ -115,7 +119,10 @@ class Mai_United_Robots_Listener {
 					$datetime->modify( "{$gmt_offset} seconds" );
 
 					// Set the post_modified field with the adjusted timestamp.
-					$post_args['post_modified'] = $datetime->format( 'Y-m-d H:i:s' );
+					$modified_formatted         = $datetime->format( 'Y-m-d H:i:s' );
+					$post_args['post_modified'] = $modified_formatted;
+				} elseif ( $published_formatted ) {
+					$modified_formatted = $published_formatted;
 				}
 			}
 		}
@@ -138,14 +145,24 @@ class Mai_United_Robots_Listener {
 			return $this->send_json_error( 'Failed during wp_insert_post()' );
 		}
 
-		// Set post content. This runs after so we can attach images to the post ID.
-		$updated_id = wp_update_post(
-			[
+		// Set default args to update post content.
+		$update_args = [
+			'ID'           => $this->post_id,
+			'post_content' => $this->handle_content( $content ),
+		];
 
-				'ID'           => $this->post_id,
-				'post_content' => $this->handle_content( $content ),
-			]
-		);
+		// If we updated an existing post.
+		if ( ! $existing ) {
+			// Update the modified date with the original.
+			if ( $modified_formatted ) {
+				$update_args['post_modified'] = $modified_formatted;
+			} else {
+				$update_args['post_modified'] = get_post_field( 'post_modified', $this->post_id );
+			}
+		}
+
+		// Set post content. This runs after so we can attach images to the post ID.
+		$updated_id = wp_update_post( $update_args );
 
 		// If not updating an existing post.
 		if ( ! $update ) {
