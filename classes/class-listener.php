@@ -64,12 +64,16 @@ class Mai_United_Robots_Listener {
 		];
 
 		// Get times.
-		$published = isset( $this->body['sent']['first'] ) && $this->body['sent']['first'] ? $this->body['sent']['first'] : '';
-		$modified  = isset( $this->body['sent']['latest'] ) && $this->body['sent']['latest'] ? $this->body['sent']['latest'] : '';
+		$published  = isset( $this->body['sent']['first'] ) && $this->body['sent']['first'] ? $this->body['sent']['first'] : '';
+		$modified   = isset( $this->body['sent']['latest'] ) && $this->body['sent']['latest'] ? $this->body['sent']['latest'] : '';
+		$gmt_offset = get_option( 'gmt_offset' ) * 3600;
 
 		// If published time.
 		if ( $published ) {
-			$datetime               = new DateTime( $published );
+			// Create a DateTime object with the modified time and adjust for GMT offset.
+			$datetime = new DateTime( $published );
+			$datetime->modify( "{$gmt_offset} seconds" );
+
 			$post_args['post_date'] = $datetime->format( 'Y-m-d H:i:s' );
 		}
 
@@ -103,8 +107,11 @@ class Mai_United_Robots_Listener {
 
 				// If modified time.
 				if ( $modified ) {
-					$datetime                   = new DateTime( $modified );
-					// $post_args['post_date']     = $datetime->format( 'Y-m-d H:i:s' );
+					// Create a DateTime object with the modified time and adjust for GMT offset.
+					$datetime = new DateTime( $modified );
+					$datetime->modify( "{$gmt_offset} seconds" );
+
+					// Set the post_modified field with the adjusted timestamp.
 					$post_args['post_modified'] = $datetime->format( 'Y-m-d H:i:s' );
 				}
 			}
