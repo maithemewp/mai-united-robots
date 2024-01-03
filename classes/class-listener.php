@@ -7,13 +7,15 @@ use Alley\WP\Block_Converter\Block_Converter;
 
 class Mai_United_Robots_Listener {
 	protected $body;
+	protected $return_json;
 	protected $post_id;
 
 	/**
 	 * Construct the class.
 	 */
-	function __construct( $body ) {
-		$this->body = is_string( $body ) ? json_decode( $body, true ) : $body;
+	function __construct( $body, $return_json = true ) {
+		$this->body        = is_string( $body ) ? json_decode( $body, true ) : $body;
+		$this->return_json = $return_json;
 		$this->run();
 	}
 
@@ -45,7 +47,8 @@ class Mai_United_Robots_Listener {
 		if ( ! ( $title && $content ) ) {
 			mai_united_robots_logger( 'Missing title and content' );
 			mai_united_robots_logger( $this->body );
-			return wp_send_json_error( 'Missing title and content' );
+
+			return $this->send_json_error( 'Missing title and content' );
 		}
 
 		// Set default user.
@@ -128,10 +131,11 @@ class Mai_United_Robots_Listener {
 		if ( ! $this->post_id || is_wp_error( $this->post_id ) ) {
 			if ( is_wp_error( $this->post_id ) ) {
 				mai_united_robots_logger( $this->post_id->get_error_code() . ': ' . $this->post_id->get_error_message() );
-				return wp_send_json_error( $this->post_id->get_error_message(), $this->post_id->get_error_code() );
+
+				return $this->send_json_error( $this->post_id->get_error_message(), $this->post_id->get_error_code() );
 			}
 
-			return wp_send_json_error( 'Failed during wp_insert_post()' );
+			return $this->send_json_error( 'Failed during wp_insert_post()' );
 		}
 
 		// Set post content. This runs after so we can attach images to the post ID.
@@ -180,7 +184,38 @@ class Mai_United_Robots_Listener {
 
 		// Return success.
 		$text = $update ? 'updated successfully' : 'imported successfully';
-		wp_send_json_success( 'Post ' . $this->post_id . ' ' . $text, 200 );
+
+		return $this->send_json_success( 'Post ' . $this->post_id . ' ' . $text, 200 );
+	}
+
+	/**
+	 * Maybe send json error.
+	 *
+	 * @since 0.3.0
+	 *
+	 * @return JSON|void
+	 */
+	function send_json_error( $message, $code = null ) {
+		if ( $this->return_json ) {
+			return wp_send_json_error( $message, $code );
+		}
+
+		return;
+	}
+
+	/**
+	 * Maybe send json success.
+	 *
+	 * @since 0.3.0
+	 *
+	 * @return JSON|void
+	 */
+	function send_json_success( $message, $code = null ) {
+		if ( $this->return_json ) {
+			return wp_send_json_success( $message, $code );
+		}
+
+		return;
 	}
 
 	/**

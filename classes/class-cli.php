@@ -127,7 +127,7 @@ class Mai_United_Robots_CLI {
 				}
 
 				// Update post via listener class.
-				$listener = new Mai_United_Robots_Listener( $body );
+				$listener = new Mai_United_Robots_Listener( $body, false );
 
 				WP_CLI::line( 'Updated: ' . get_permalink( $listener->get_post_id() ) );
 
