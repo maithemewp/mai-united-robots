@@ -110,7 +110,7 @@ class Mai_United_Robots_CLI {
 				// Get post with a meta key of reference_id and meta value of the ref_id.
 				$existing = get_posts(
 					[
-						'post_type'      => $assoc_args['post_type'],
+						'post_type'      => $args['post_type'],
 						'meta_key'       => 'reference_id',
 						'meta_value'     => $ref_id,
 						'meta_compare'   => '=',
@@ -305,7 +305,7 @@ class Mai_United_Robots_CLI {
 				// Get post with a meta key of reference_id and meta value of the ref_id.
 				$existing = get_posts(
 					[
-						'post_type'      => $assoc_args['post_type'],
+						'post_type'      => $args['post_type'],
 						'meta_key'       => 'reference_id',
 						'meta_value'     => $ref_id,
 						'meta_compare'   => '=',
