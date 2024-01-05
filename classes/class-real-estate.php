@@ -27,16 +27,16 @@ class Mai_United_Robots_Real_Estate_Listener extends Mai_United_Robots_Listener 
 		}
 
 		// Add (or create then add) the category.
-		wp_set_object_terms( $this->post_id, $category, 'category', $append = true );
+		wp_set_object_terms( $this->post_id, $category, 'category', $append = false );
 
 		// Maybe add a child category.
 		if ( $child ) {
-			wp_set_post_terms( $this->post_id, $child, 'category', $append = true );
+			wp_set_object_terms( $this->post_id, $child, 'category', $append = true );
 		}
 
 		// Maybe add a tag.
-		if ( $child ) {
-			wp_set_post_terms( $this->post_id, $tag, 'post_tag', $append = true );
+		if ( $tag ) {
+			wp_set_object_terms( $this->post_id, $tag, 'post_tag', $append = true );
 		}
 	}
 
@@ -72,5 +72,21 @@ class Mai_United_Robots_Real_Estate_Listener extends Mai_United_Robots_Listener 
 		}, $content );
 
 		return $result;
+	}
+
+	/**
+	 * Get image urls for automatic import.
+	 *
+	 * @return void
+	 */
+	function get_image_urls() {
+		$image_urls = [];
+
+		// Maybe add the streetview image.
+		if ( isset( $this->body['description']['streetview'] ) ) {
+			$image_urls[] = $this->body['description']['streetview'];
+		}
+
+		return $image_urls;
 	}
 }
