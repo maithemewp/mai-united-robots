@@ -79,12 +79,34 @@ function mai_united_robots_get_author_email() {
 function mai_united_robots_json_decode( $string ) {
 	$string = trim( $string, '""' );
 	$string = trim( $string, '"' );
-	$string = str_replace( ' "', ' \"', $string );
-	$string = str_replace( '" ', '\" ', $string );
-	$string = str_replace( '"",', '\"",', $string );
-	$string = str_replace( ',""', ',"\"', $string );
 
-	return json_decode( $string, true );
+	$decode = json_decode( $string, true );
+
+	if ( ! $decode ) {
+		$string = str_replace( ' "', ' \"', $string );
+	}
+
+	$decode = json_decode( $string, true );
+
+	if ( ! $decode ) {
+		$string = str_replace( '" ', '\" ', $string );
+	}
+
+	$decode = json_decode( $string, true );
+
+	if ( ! $decode ) {
+		$string = str_replace( '"",', '\"",', $string );
+	}
+
+	$decode = json_decode( $string, true );
+
+	if ( ! $decode ) {
+		$string = str_replace( ',""', ',"\"', $string );
+	}
+
+	$decode = json_decode( $string, true );
+
+	return $decode;
 }
 
 /**
