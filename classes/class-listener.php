@@ -72,14 +72,17 @@ class Mai_United_Robots_Listener {
 		add_action( 'wp_insert_post_data', [ $this, 'force_modified_date' ], 20, 2 );
 
 		// Get times.
-		$published  = isset( $this->body['sent']['first'] ) && $this->body['sent']['first'] ? $this->body['sent']['first'] : '';
-		$modified   = isset( $this->body['sent']['latest'] ) && $this->body['sent']['latest'] ? $this->body['sent']['latest'] : '';
-		$gmt_offset = get_option( 'gmt_offset' ) * 3600;
+		$published = isset( $this->body['sent']['first'] ) && $this->body['sent']['first'] ? $this->body['sent']['first'] : '';
+		$modified  = isset( $this->body['sent']['latest'] ) && $this->body['sent']['latest'] ? $this->body['sent']['latest'] : '';
 
 		// If published time.
 		if ( $published ) {
-			$published              = date( 'Y-m-d H:i:s', strtotime( $published ) );
-			$post_args['post_date'] = $published;
+			$published = $this->get_date( $published );
+
+			// If this date is not in the future.
+			if ( strtotime( $published ) < strtotime( 'now' ) ) {
+				$post_args['post_date'] = $published;
+			}
 		}
 
 		// Get article id.
@@ -99,9 +102,6 @@ class Mai_United_Robots_Listener {
 				]
 			);
 
-			mai_united_robots_logger( 'get_posts()' );
-			mai_united_robots_logger( $existing );
-
 			// Get first.
 			$existing = $existing && isset( $existing[0] ) ? $existing[0] : 0;
 
@@ -112,19 +112,24 @@ class Mai_United_Robots_Listener {
 
 				// If modified time.
 				if ( $modified ) {
-					$this->modified = date( 'Y-m-d H:i:s', strtotime( $modified ) );
+					$this->modified = $this->get_date( $modified );
 				} elseif ( $published ) {
-					$this->modified = date( 'Y-m-d H:i:s', strtotime( $published ) );
+					$this->modified = $this->get_date( $published );
+				}
+
+				/**
+				 * If ends with a dash and a number, try to fix the url.
+				 * This was to fix a prior bug with scheduled posts duplicating.
+				 */
+				if ( preg_match( '/-\d+$/', get_post( $existing )->post_name, $matches ) ) {
+					$suffix                 = $matches[0];
+					$post_args['post_name'] = sanitize_title_with_dashes( $title );
 				}
 			}
 		}
 
 		// Insert or update the post.
 		$this->post_id = wp_insert_post( $post_args );
-
-		// Log post data.
-		mai_united_robots_logger( $this->post_id );
-		mai_united_robots_logger( $post_args );
 
 		// Bail if we don't have a post ID or there was an error.
 		if ( ! $this->post_id || is_wp_error( $this->post_id ) ) {
@@ -197,12 +202,28 @@ class Mai_United_Robots_Listener {
 	 * @return array Slashed post data with modified post_modified and post_modified_gmt.
 	 */
 	function force_modified_date( $data, $postarr ) {
-		if ( $this->modified ) {
-			$data['post_modified']     = date( 'Y-m-d H:i:s', strtotime( $this->modified ) );
+		if ( $this->modified && ( strtotime( $this->modified ) < strtotime( 'now' ) ) ) {
+			$data['post_modified']     = $this->get_date( $this->modified );
 			$data['post_modified_gmt'] = get_gmt_from_date( $data['post_modified'] );
 		}
 
 		return $data;
+	}
+
+	/**
+	 * Gets a date string from a ISO 8601 date-time format.
+	 *
+	 * @since 0.4.0
+	 *
+	 * @param string $iso ISO 8601 date-time format.
+	 *
+	 * @return string
+	 */
+	function get_date( $iso ) {
+		$dateTime = new DateTime( $iso, new DateTimeZone( 'UTC' ) );
+		$dateTime->setTimeZone( new DateTimeZone( get_option( 'timezone_string' ) ) );
+		return $dateTime->format( 'Y-m-d H:i:s' );
+
 	}
 
 	/**
@@ -306,7 +327,7 @@ class Mai_United_Robots_Listener {
 					}
 
 					// Check if there is an existing image.
-					$existing_id = get_posts(
+					$existing_ids = get_posts(
 						[
 							'post_type'    => 'attachment',
 							'meta_key'     => 'unitedrobots_url',
@@ -317,8 +338,8 @@ class Mai_United_Robots_Listener {
 					);
 
 					// If we have an existing image, use it.
-					if ( $existing_id && isset( $existing_id[0] ) ) {
-						$content[ $index ] = wp_get_attachment_image( $existing_id[0], 'large' );
+					if ( $existing_ids && isset( $existing_ids[0] ) ) {
+						$content[ $index ] = wp_get_attachment_image( $existing_ids[0], 'large' );
 						continue;
 					}
 
@@ -508,7 +529,7 @@ class Mai_United_Robots_Listener {
 		}
 
 		// Check if there is an attachment with unitedrobots_url meta key and value of $image_url.
-		$existing_id = get_posts(
+		$existing_ids = get_posts(
 			[
 				'post_type'    => 'attachment',
 				'meta_key'     => 'unitedrobots_url',
@@ -519,15 +540,60 @@ class Mai_United_Robots_Listener {
 		);
 
 		// Bail if the image already exists.
-		if ( $existing_id ) {
-			return 0;
+		if ( $existing_ids ) {
+			return $existing_ids[0];
 		}
 
 		// Set the unitedrobots URL.
 		$unitedrobots_url = $image_url;
 
+		// Check if the image is a streetview image.
+		$streetview_url = str_contains( $image_url, 'maps.googleapis.com/maps/api/streetview' );
+
+		// If streetview.
+		if ( $streetview_url ) {
+			$image_contents = file_get_contents( $image_url );
+			$image_hashed   = md5( $image_url ) . '.jpg';
+
+			if ( $image_contents ) {
+				// Get the uploads directory.
+				$upload_dir = wp_get_upload_dir();
+				$upload_url = $upload_dir['baseurl'];
+
+				// Specify the path to the destination directory within uploads.
+				$destination_dir = $upload_dir['basedir'] . '/mai-united-robots/';
+
+				// Create the destination directory if it doesn't exist.
+				if ( ! file_exists( $destination_dir ) ) {
+					mkdir( $destination_dir, 0755, true );
+				}
+
+				// Specify the path to the destination file.
+				$destination_file = $destination_dir . $image_hashed;
+
+				// Save the image to the destination file.
+				file_put_contents( $destination_file, $image_contents );
+
+				// Bail if the file doesn't exist.
+				if ( ! file_exists( $destination_file ) ) {
+					return 0;
+				}
+
+				$image_url = $image_hashed;
+			}
+
+			// Build the image url.
+			$image_url = untrailingslashit( $upload_url ) . '/mai-united-robots/' . $image_hashed;
+		}
+
 		// Build a temp url.
 		$tmp = download_url( $image_url );
+
+		// If streetview.
+		if ( $streetview_url ) {
+			// Remove the temp file.
+			@unlink( $destination_file );
+		}
 
 		// Bail if error.
 		if ( is_wp_error( $tmp ) ) {
@@ -535,7 +601,7 @@ class Mai_United_Robots_Listener {
 
 			// Remove the original image and return the error.
 			@unlink( $tmp );
-			return $tmp;
+			return 0;
 		}
 
 		// Build the file array.
@@ -549,7 +615,7 @@ class Mai_United_Robots_Listener {
 
 		// Bail if error.
 		if ( is_wp_error( $image_id ) ) {
-			mai_united_robots_logger( $tmp->get_error_code() . ': upload_image() 2 ' . $tmp->get_error_message() );
+			mai_united_robots_logger( $image_id->get_error_code() . ': upload_image() 2 ' . $image_id->get_error_message() );
 
 			// Remove the original image and return the error.
 			@unlink( $file_array[ 'tmp_name' ] );
