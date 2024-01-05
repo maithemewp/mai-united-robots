@@ -107,29 +107,25 @@ class Mai_United_Robots_CLI {
 					continue;
 				}
 
-				// Get post with a meta key of reference_id and meta value of the ref_id.
-				$existing = get_posts(
-					[
-						'post_type'      => $args['post_type'],
-						'meta_key'       => 'reference_id',
-						'meta_value'     => $ref_id,
-						'meta_compare'   => '=',
-						'fields'         => 'ids',
-						'numberposts'    => 1,
-					]
-				);
+				// Get reference id from post meta.
+				$meta_ref_id = get_post_meta( get_the_ID(), 'reference_id', true );
 
 				// Skip if no existing post.
-				if ( ! $existing ) {
+				if ( $meta_ref_id !== $ref_id ) {
 					WP_CLI::line( 'Skipped. Reference ID does not match this post. ' . get_permalink() );
 					$progress->tick();
 					continue;
 				}
 
 				// Update post via listener class.
-				$listener = new Mai_United_Robots_Listener( $body, false );
+				if ( isset( $body['description']['price'] ) || isset( $body['description']['saleTypes'] ) ) {
+					$listener = new Mai_United_Robots_Real_Estate_Listener( $body, false );
+					$listener->process();
+				} else {
+					$listener = new Mai_United_Robots_Listener( $body, false );
+				}
 
-				WP_CLI::line( 'Updated: ' . get_permalink( $listener->get_post_id() ) );
+				WP_CLI::line( 'Updated ' . $listener->get_post_id() . ': ' . get_permalink( $listener->get_post_id() ) );
 
 				$progress->tick();
 			endwhile;
