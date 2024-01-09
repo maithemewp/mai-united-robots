@@ -9,8 +9,8 @@ class Mai_United_Robots_Listener {
 	protected $body;
 	protected $return_json;
 	protected $post_id;
-	protected $modified;
-	protected $modified_gmt;
+	protected $published_iso;
+	protected $modified_iso;
 
 	/**
 	 * Construct the class.
@@ -72,15 +72,15 @@ class Mai_United_Robots_Listener {
 		add_action( 'wp_insert_post_data', [ $this, 'force_modified_date' ], 20, 2 );
 
 		// Get times.
-		$published = isset( $this->body['sent']['first'] ) && $this->body['sent']['first'] ? $this->body['sent']['first'] : '';
-		$modified  = isset( $this->body['sent']['latest'] ) && $this->body['sent']['latest'] ? $this->body['sent']['latest'] : '';
+		$this->published_iso = isset( $this->body['sent']['first'] ) && $this->body['sent']['first'] ? $this->body['sent']['first'] : '';
+		$this->modified_iso  = isset( $this->body['sent']['latest'] ) && $this->body['sent']['latest'] ? $this->body['sent']['latest'] : '';
 
 		// If published time.
-		if ( $published ) {
-			$published = $this->get_date( $published );
+		if ( $this->published_iso ) {
+			$published = $this->get_date( $this->published_iso );
 
 			// If this date is not in the future.
-			if ( strtotime( $published ) < strtotime( 'now' ) ) {
+			if ( $this->published_iso < wp_date( DATE_RFC3339, time(), new DateTimeZone( 'UTC' ) ) ) {
 				$post_args['post_date'] = $published;
 			}
 		}
@@ -111,10 +111,8 @@ class Mai_United_Robots_Listener {
 				$post_args['ID'] = $existing;
 
 				// If modified time.
-				if ( $modified ) {
-					$this->modified = $this->get_date( $modified );
-				} elseif ( $published ) {
-					$this->modified = $this->get_date( $published );
+				if ( ! $this->modified_iso && $this->published_iso ) {
+					$this->modified_iso = $this->published_iso;
 				}
 
 				/**
@@ -202,8 +200,8 @@ class Mai_United_Robots_Listener {
 	 * @return array Slashed post data with modified post_modified and post_modified_gmt.
 	 */
 	function force_modified_date( $data, $postarr ) {
-		if ( $this->modified && ( strtotime( $this->modified ) < strtotime( 'now' ) ) ) {
-			$data['post_modified']     = $this->get_date( $this->modified );
+		if ( $this->modified_iso && ( $this->modified_iso < wp_date( DATE_RFC3339, time(), new DateTimeZone( 'UTC' ) ) ) ) {
+			$data['post_modified']     = $this->get_date( $this->modified_iso );
 			$data['post_modified_gmt'] = get_gmt_from_date( $data['post_modified'] );
 		}
 
@@ -211,19 +209,17 @@ class Mai_United_Robots_Listener {
 	}
 
 	/**
-	 * Gets a date string from a ISO 8601 date-time format.
+	 * Gets a formmatted date string in the current website timezone,
+	 * for use in `wp_insert_post()`.
 	 *
 	 * @since 0.4.0
 	 *
-	 * @param string $iso ISO 8601 date-time format.
+	 * @param string $date_time Any date string that works with `strtotime()`.
 	 *
 	 * @return string
 	 */
-	function get_date( $iso ) {
-		$date_time = new DateTime( $iso, new DateTimeZone( 'UTC' ) );
-		$date_time->setTimeZone( new DateTimeZone( get_option( 'timezone_string' ) ) );
-		return $date_time->format( 'Y-m-d H:i:s' );
-
+	function get_date( $date_time ) {
+		return wp_date( 'Y-m-d H:i:s', strtotime( $date_time ) );
 	}
 
 	/**
