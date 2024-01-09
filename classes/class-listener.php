@@ -220,8 +220,10 @@ class Mai_United_Robots_Listener {
 	 * @return string
 	 */
 	function get_date( $iso ) {
-		$datetime = new DateTime( $iso );
-		return $datetime->format( 'Y-m-d H:i:s' );
+		$date_time = new DateTime( $iso, new DateTimeZone( 'UTC' ) );
+		$date_time->setTimeZone( new DateTimeZone( get_option( 'timezone_string' ) ) );
+		return $date_time->format( 'Y-m-d H:i:s' );
+
 	}
 
 	/**
