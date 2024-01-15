@@ -593,7 +593,7 @@ class Mai_United_Robots_Listener {
 
 		// Bail if error.
 		if ( is_wp_error( $tmp ) ) {
-			mai_united_robots_logger( $tmp->get_error_code() . ': upload_image() 1 ' . $tmp->get_error_message() );
+			mai_united_robots_logger( $tmp->get_error_code() . ': upload_image() 1 ' . $image_url . ' ' . $tmp->get_error_message() );
 
 			// Remove the original image and return the error.
 			@unlink( $tmp );
@@ -611,7 +611,7 @@ class Mai_United_Robots_Listener {
 
 		// Bail if error.
 		if ( is_wp_error( $image_id ) ) {
-			mai_united_robots_logger( $image_id->get_error_code() . ': upload_image() 2 ' . $image_id->get_error_message() );
+			mai_united_robots_logger( $image_id->get_error_code() . ': upload_image() 2 ' . $image_url . ' ' . $image_id->get_error_message() );
 
 			// Remove the original image and return the error.
 			@unlink( $file_array[ 'tmp_name' ] );
