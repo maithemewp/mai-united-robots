@@ -140,7 +140,7 @@ class Mai_United_Robots_Endpoints {
 		}
 
 		// Log decoded body.
-		mai_united_robots_logger( $body );
+		// mai_united_robots_logger( $body );
 
 		// Bail if no body.
 		if ( ! $body ) {
