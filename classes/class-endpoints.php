@@ -3,6 +3,11 @@
 // Prevent direct file access.
 defined( 'ABSPATH' ) || die;
 
+/**
+ * The endpoints class.
+ *
+ * @since 0.1.0
+ */
 class Mai_United_Robots_Endpoints {
 	protected $token;
 	protected $request;
@@ -40,19 +45,33 @@ class Mai_United_Robots_Endpoints {
 		 * /maiunitedrobots/v1/weather/
 		 */
 		$routes = [
-			'real-estate' => 'handle_real_estate_request',
-			'weather'     => 'handle_weather_request',
 			'hurricane'   => 'handle_hurricane_request',
+			'real-estate' => 'handle_real_estate_request',
+			'traffic'     => 'handle_traffic_request',
+			'weather'     => 'handle_weather_request',
 		];
 
 		// Loop through routes and register them.
 		foreach ( $routes as $path => $callback ) {
 			register_rest_route( 'maiunitedrobots/v1', $path, [
-				'methods'             => 'POST',
+				'methods'             => 'PUT', // The API does check for auth cookies and nonces when you make POST or PUT requests, but not GET requests.
 				'callback'            => [ $this, $callback ],
 				'permission_callback' => '__return_true',
 			] );
 		}
+	}
+
+	/**
+	 * Handle the hurricane request.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @return void
+	 */
+	function handle_hurricane_request( $request ) {
+		$this->validate_request( $request );
+
+		$listener = new Mai_United_Robots_Hurricane_Listener( $this->body );
 	}
 
 	/**
@@ -69,6 +88,19 @@ class Mai_United_Robots_Endpoints {
 	}
 
 	/**
+	 * Handle the traffic request.
+	 *
+	 * @since 0.6.0
+	 *
+	 * @return void
+	 */
+	function handle_traffic_request( $request ) {
+		$this->validate_request( $request );
+
+		$listener = new Mai_United_Robots_Traffic_Listener( $this->body );
+	}
+
+	/**
 	 * Handle the weather request.
 	 *
 	 * @since 0.1.0
@@ -79,19 +111,6 @@ class Mai_United_Robots_Endpoints {
 		$this->validate_request( $request );
 
 		$listener = new Mai_United_Robots_Weather_Listener( $this->body );
-	}
-
-	/**
-	 * Handle the hurricane request.
-	 *
-	 * @since 0.1.0
-	 *
-	 * @return void
-	 */
-	function handle_hurricane_request( $request ) {
-		$this->validate_request( $request );
-
-		$listener = new Mai_United_Robots_Hurricane_Listener( $this->body );
 	}
 
 	/**

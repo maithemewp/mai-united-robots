@@ -3,6 +3,11 @@
 // Prevent direct file access.
 defined( 'ABSPATH' ) || die;
 
+/**
+ * The weather class.
+ *
+ * @since 0.1.0
+ */
 class Mai_United_Robots_Weather_Listener extends Mai_United_Robots_Listener {
 	/**
 	 * Additional processing specific to this listener.
@@ -17,6 +22,10 @@ class Mai_United_Robots_Weather_Listener extends Mai_United_Robots_Listener {
 		// Add (or create then add) the category.
 		wp_set_object_terms( $this->post_id, $category, 'category', $append = false );
 	}
+
+
+	// TODO: Add event (and priority when that gets added).
+
 
 	/**
 	 * Get the image urls.

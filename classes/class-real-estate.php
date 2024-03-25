@@ -3,6 +3,11 @@
 // Prevent direct file access.
 defined( 'ABSPATH' ) || die;
 
+/**
+ * The real estate class.
+ *
+ * @since 0.1.0
+ */
 class Mai_United_Robots_Real_Estate_Listener extends Mai_United_Robots_Listener {
 	protected $image_url = '';
 

@@ -3,6 +3,11 @@
 // Prevent direct file access.
 defined( 'ABSPATH' ) || die;
 
+/**
+ * The hurricane class.
+ *
+ * @since 0.1.0
+ */
 class Mai_United_Robots_Hurricane_Listener extends Mai_United_Robots_Listener {
 	/**
 	 * Additional processing specific to this listener.

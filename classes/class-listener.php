@@ -94,6 +94,7 @@ class Mai_United_Robots_Listener {
 			$existing = get_posts(
 				[
 					'post_type'    => 'post',
+					'post_status'  => 'any',
 					'meta_key'     => 'reference_id',
 					'meta_value'   => $ref_id,
 					'meta_compare' => '=',
@@ -326,10 +327,12 @@ class Mai_United_Robots_Listener {
 					$existing_ids = get_posts(
 						[
 							'post_type'    => 'attachment',
+							'post_status'  => 'any',
 							'meta_key'     => 'unitedrobots_url',
 							'meta_value'   => $src,
 							'meta_compare' => '=',
 							'fields'       => 'ids',
+							'numberposts'  => 1,
 						]
 					);
 
@@ -528,10 +531,12 @@ class Mai_United_Robots_Listener {
 		$existing_ids = get_posts(
 			[
 				'post_type'    => 'attachment',
+				'post_status'  => 'any',
 				'meta_key'     => 'unitedrobots_url',
 				'meta_value'   => $image_url,
 				'meta_compare' => '=',
 				'fields'       => 'ids',
+				'numberposts'  => 1,
 			]
 		);
 
