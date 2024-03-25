@@ -341,7 +341,7 @@ class Mai_United_Robots_CLI {
 	 * 4. Execute via command line:
 	 *    wp maiunitedrobots test_feed --feed=traffic
 	 *
-	 * @since TBD
+	 * @since 0.6.0
 	 *
 	 * @param array $args       Standard command args.
 	 * @param array $assoc_args Keyed args like --posts_per_page and --offset.
