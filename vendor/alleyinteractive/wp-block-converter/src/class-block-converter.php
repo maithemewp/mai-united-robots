@@ -12,11 +12,16 @@ namespace Alley\WP\Block_Converter;
 use DOMElement;
 use DOMNode;
 use Exception;
+use Mantle\Support\Traits\Macroable;
 
 /**
  * Converts a DOMDocument to Gutenberg block HTML.
  */
 class Block_Converter {
+	use Macroable {
+		__call as macro_call;
+	}
+
 	/**
 	 * Setup the class.
 	 *
@@ -89,6 +94,10 @@ class Block_Converter {
 	 * @return Block|null
 	 */
 	public function __call( $name, $arguments ): ?Block {
+		if ( static::has_macro( $name ) ) {
+			return static::macro_call( $name, $arguments );
+		}
+
 		return match ( $name ) {
 			'ul' => $this->ul( $arguments[0] ),
 			'ol' => $this->ol( $arguments[0] ),
@@ -97,6 +106,7 @@ class Block_Converter {
 			'h1', 'h2', 'h3', 'h4', 'h5', 'h6' => $this->h( $arguments[0] ),
 			'p', 'a', 'abbr', 'b', 'code', 'em', 'i', 'strong', 'sub', 'sup', 'span', 'u' => $this->p( $arguments[0] ),
 			'br', 'cite', 'source' => null,
+			'hr' => $this->separator(),
 			default => $this->html( $arguments[0] ),
 		};
 	}
@@ -158,6 +168,19 @@ class Block_Converter {
 	 */
 	protected function p( DOMNode $node ): ?Block {
 		$content = static::get_node_html( $node );
+
+		if ( ! empty( filter_var( $node->textContent, FILTER_VALIDATE_URL ) ) ) {
+			// Instagram and Facebook embeds require an api key to retrieve oEmbed data.
+			if ( \str_contains( $node->textContent, 'instagram.com' ) ) {
+				return $this->instagram_embed( $node->textContent );
+			}
+			if ( \str_contains( $node->textContent, 'facebook.com' ) ) {
+				return $this->facebook_embed( $node->textContent );
+			}
+			if ( false !== wp_oembed_get( $node->textContent ) ) {
+				return $this->embed( $node->textContent );
+			}
+		}
 
 		if ( empty( $content ) ) {
 			return null;
@@ -225,7 +248,7 @@ class Block_Converter {
 	 * Create ol blocks.
 	 *
 	 * @param DOMNode $node The node.
-	 * @return block
+	 * @return Block
 	 */
 	protected function ol( DOMNode $node ): Block {
 		return new Block(
@@ -234,6 +257,119 @@ class Block_Converter {
 				'ordered' => true,
 			],
 			content: static::get_node_html( $node ),
+		);
+	}
+
+	/**
+	 * Create embed blocks.
+	 *
+	 * @param string $url The URL.
+	 * @return Block
+	 */
+	protected function embed( string $url ): Block {
+		// This would probably be better as an internal request to /wp-json/oembed/1.0/proxy?url=...
+		$data = _wp_oembed_get_object()->get_data( $url, [] );
+
+		$aspect_ratio = '';
+		if ( ! empty( $data->height ) && ! empty( $data->width ) ) {
+			if ( 1.78 === round( $data->width / $data->height, 2 ) ) {
+				$aspect_ratio = '16-9';
+			}
+			if ( 1.33 === round( $data->width / $data->height, 2 ) ) {
+				$aspect_ratio = '4-3';
+			}
+		}
+
+		$atts = [
+			'url'              => $url,
+			'type'             => $data->type,
+			'providerNameSlug' => sanitize_title( $data->provider_name ),
+			'responsive'       => true,
+		];
+
+		if ( ! empty( $aspect_ratio ) ) {
+			$aspect_ratio      = sprintf( 'wp-embed-aspect-%s wp-has-aspect-ratio', $aspect_ratio );
+			$atts['className'] = $aspect_ratio;
+		}
+
+		return new Block(
+			block_name: 'embed',
+			attributes: $atts,
+			content: sprintf(
+				'<figure class="wp-block-embed is-type-%s is-provider-%s wp-block-embed-%s%s"><div class="wp-block-embed__wrapper">
+				%s
+				</div></figure>',
+				$data->type,
+				sanitize_title( $data->provider_name ),
+				sanitize_title( $data->provider_name ),
+				$aspect_ratio ? ' ' . $aspect_ratio : '',
+				$url
+			),
+		);
+	}
+
+	/**
+	 * Create Instagram embed blocks.
+	 *
+	 * @param string $url The URL.
+	 * @return Block
+	 */
+	protected function instagram_embed( string $url ): Block {
+		$atts = [
+			'url'              => $url,
+			'type'             => 'rich',
+			'providerNameSlug' => 'instagram',
+			'responsive'       => true,
+		];
+
+		return new Block(
+			block_name: 'embed',
+			attributes: $atts,
+			content: sprintf(
+				'<figure class="wp-block-embed is-type-rich is-provider-instagram wp-block-embed-instagram"><div class="wp-block-embed__wrapper">
+				%s
+				</div></figure>',
+				$url
+			),
+		);
+	}
+
+	/**
+	 * Create Instagram embed blocks.
+	 *
+	 * @param string $url The URL.
+	 * @return Blockx
+	 */
+	protected function facebook_embed( string $url ): Block {
+		$atts = [
+			'url'              => $url,
+			'type'             => 'rich',
+			'providerNameSlug' => 'embed-handler',
+			'responsive'       => true,
+			'previewable'      => false,
+		];
+
+		return new Block(
+			block_name: 'embed',
+			attributes: $atts,
+			content: sprintf(
+				'<figure class="wp-block-embed is-type-rich is-provider-embed-handler wp-block-embed-embed-handler"><div class="wp-block-embed__wrapper">
+				%s
+				</div></figure>',
+				$url
+			),
+		);
+	}
+
+	/**
+	 * Create separator blocks.
+	 *
+	 * @return Block
+	 */
+	protected function separator(): Block {
+		return new Block(
+			block_name: 'separator',
+			content: '<hr class="wp-block-separator has-alpha-channel-opacity"/>'
 		);
 	}
 
