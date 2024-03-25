@@ -1,0 +1,178 @@
+{
+	"format": "unitedrobots4",
+	"customer": {
+	  "name": "Bizbudding Traffic"
+	},
+	"receiver": {
+	  "name": "Bizbudding Traffic - SC"
+	},
+	"article": {
+	  "id": "breaking_TOMTOM_62d930f992dd9de8513d4aaa25d59edb",
+	  "createdAt": "2024-01-26T10:21:51.972Z",
+	  "generatedAt": "2024-01-26T10:21:51.972Z",
+	  "type": "breaking-traffic",
+	  "priority": 1,
+	  "status": "changed",
+	  "text": {
+		"title": "Leavenworth Rd Richtung I-435 S",
+		"bodyParts": [
+		  "The road is closed between Hutton Rd and I-435 S in Kansas City.",
+		  "The traffic alert was released Tuesday at 11:38 p.m., and the last update regarding this incident was released on Friday at 11:21 a.m."
+		]
+	  }
+	},
+	"referenceId": 119869256,
+	"description": {
+	  "extraDataForPriority": {
+		"additionalDescription": {
+		  "geometry": {
+			"type": "LineString",
+			"coordinates": [
+			  [
+				-94.8307081207,
+				39.1431552706
+			  ],
+			  [
+				-94.8304291709,
+				39.1431565708
+			  ],
+			  [
+				-94.8302615329,
+				39.1431579359
+			  ],
+			  [
+				-94.8301703378,
+				39.1431593011
+			  ],
+			  [
+				-94.8288144811,
+				39.1431431792
+			  ],
+			  [
+				-94.8285207792,
+				39.1431431792
+			  ],
+			  [
+				-94.8272722109,
+				39.1431472097
+			  ],
+			  [
+				-94.8267304047,
+				39.1431485748
+			  ],
+			  [
+				-94.8263347789,
+				39.1431485748
+			  ],
+			  [
+				-94.8257218941,
+				39.1431525403
+			  ]
+			]
+		  }
+		},
+		"_googleMaps": [],
+		"_imageHandlers": [
+		  {
+			"id": 119869254,
+			"type": "image_handler",
+			"scheduled": null,
+			"status": "COMPLETE",
+			"output": {
+			  "id": 119869254,
+			  "bucketUrl": "http://published.unitedrobots.se/breaking/task_119869254.jpeg"
+			},
+			"execution_start": "2024-01-26T10:21:51.536Z",
+			"execution_end": "2024-01-26T10:21:53.268Z",
+			"parameters": {
+			  "key": "TOMTOM_62d930f992dd9de8513d4aaa25d59edb",
+			  "robot": "breaking",
+			  "depKey": "119869253",
+			  "layers": [
+				{
+				  "map": {
+					"name": "Kartbild",
+					"center": "39.1431552706, -94.8307081207",
+					"marker": "39.1431552706,-94.8307081207|39.1431525403,-94.8257218941",
+					"mapType": "satellite",
+					"sizeDetails": {
+					  "size": "1240x700",
+					  "unavailableFileSize": 17
+					}
+				  }
+				}
+			  ],
+			  "collection": "tomtom",
+			  "rootFolder": "breaking"
+			},
+			"key": "f9ee3ad54d17f626f0ef75083c23e903",
+			"output_changed": "2024-01-26T10:21:53.268Z",
+			"dispatch_time": "2024-01-26T10:21:51.536Z",
+			"output_hash": "0626596d4e886f1d2cc306fdb7409cc8",
+			"fail_count": 0,
+			"concurrency_key": null
+		  }
+		],
+		"_reverseGeocoders": [],
+		"_collection": "tomtom"
+	  },
+	  "geometry": {
+		"type": "LineString",
+		"coordinates": [
+		  [
+			-94.8307081207,
+			39.1431552706
+		  ],
+		  [
+			-94.8304291709,
+			39.1431565708
+		  ],
+		  [
+			-94.8302615329,
+			39.1431579359
+		  ],
+		  [
+			-94.8301703378,
+			39.1431593011
+		  ],
+		  [
+			-94.8288144811,
+			39.1431431792
+		  ],
+		  [
+			-94.8285207792,
+			39.1431431792
+		  ],
+		  [
+			-94.8272722109,
+			39.1431472097
+		  ],
+		  [
+			-94.8267304047,
+			39.1431485748
+		  ],
+		  [
+			-94.8263347789,
+			39.1431485748
+		  ],
+		  [
+			-94.8257218941,
+			39.1431525403
+		  ]
+		]
+	  },
+	  "deleted": false,
+	  "image": "http://published.unitedrobots.se/breaking/task_119869254.jpeg",
+	  "iptc": {
+		"code": "20000139",
+		"name": "Akut händelse"
+	  },
+	  "image_text": "Leavenworth Rd Richtung I-435 S",
+	  "image_byline": "Google Maps"
+	},
+	"sent": {
+	  "first": "2024-01-31T13:49:55.525Z",
+	  "latest": "2024-01-31T13:49:55.525Z"
+	},
+	"id": 5160
+}
