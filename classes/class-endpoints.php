@@ -41,7 +41,9 @@ class Mai_United_Robots_Endpoints {
 	 */
 	function register_endpoint() {
 		/**
+		 * /maiunitedrobots/v1/hurricane/
 		 * /maiunitedrobots/v1/real-estate/
+		 * /maiunitedrobots/v1/traffic/
 		 * /maiunitedrobots/v1/weather/
 		 */
 		$routes = [
