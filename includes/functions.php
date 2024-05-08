@@ -79,32 +79,46 @@ function mai_united_robots_get_author_email() {
 function mai_united_robots_json_decode( $string ) {
 	$string = trim( $string, '""' );
 	$string = trim( $string, '"' );
-
 	$decode = json_decode( $string, true );
 
+	// If decoding failed.
 	if ( ! $decode ) {
-		$string = str_replace( ' "', ' \"', $string );
+		// Extract HTML content from JSON string.
+		preg_match_all( '/<[^>]*>/', $string, $matches );
+
+		// Encode HTML content.
+		$encode = array_map( 'wp_slash', $matches[0] );
+
+		// Replace original HTML content in JSON string with encoded HTML content.
+		$replaced = str_replace( $matches[0], $encode, $string );
+
+		// Try to decode again.
+		$decode = json_decode( $replaced, true );
 	}
 
-	$decode = json_decode( $string, true );
+	// if ( ! $decode ) {
+	// 	$string = str_replace( ' "', ' \"', $string );
+	// }
 
-	if ( ! $decode ) {
-		$string = str_replace( '" ', '\" ', $string );
-	}
+	// $decode = json_decode( $string, true );
 
-	$decode = json_decode( $string, true );
+	// if ( ! $decode ) {
+	// 	$string = str_replace( '" ', '\" ', $string );
+	// }
 
-	if ( ! $decode ) {
-		$string = str_replace( '"",', '\"",', $string );
-	}
+	// $decode = json_decode( $string, true );
 
-	$decode = json_decode( $string, true );
+	// if ( ! $decode ) {
+	// 	$string = str_replace( '"",', '\"",', $string );
+	// }
 
-	if ( ! $decode ) {
-		$string = str_replace( ',""', ',"\"', $string );
-	}
+	// $decode = json_decode( $string, true );
 
-	$decode = json_decode( $string, true );
+	// if ( ! $decode ) {
+	// 	$string = str_replace( ',""', ',"\"', $string );
+	// }
+
+	// $decode = json_decode( $string, true );
 
 	return $decode;
 }
