@@ -6,6 +6,7 @@ defined( 'ABSPATH' ) || die;
 use Alley\WP\Block_Converter\Block_Converter;
 
 class Mai_United_Robots_Listener {
+	protected $original_body;
 	protected $body;
 	protected $return_json;
 	protected $post_id;
@@ -16,8 +17,9 @@ class Mai_United_Robots_Listener {
 	 * Construct the class.
 	 */
 	function __construct( $body, $return_json = true ) {
-		$this->body        = is_string( $body ) ? json_decode( $body, true ) : $body;
-		$this->return_json = $return_json;
+		$this->original_body = is_string( $body ) ? $body : null;
+		$this->body          = is_string( $body ) ? json_decode( $body, true ) : $body;
+		$this->return_json   = $return_json;
 		$this->run();
 	}
 
@@ -149,13 +151,16 @@ class Mai_United_Robots_Listener {
 			]
 		);
 
-		// Save the body for reference.
-		update_post_meta( $this->post_id, 'unitedrobots_body', wp_json_encode( $this->body ) );
-
 		// If not updating an existing post.
 		if ( ! $update ) {
 			// This should be overridden in child classes.
 			$this->process();
+
+			// If we have original body.
+			if ( $this->original_body ) {
+				// Save the original body for reference.
+				update_post_meta( $this->post_id, 'unitedrobots_body', wp_json_encode( $this->original_body ) );
+			}
 		}
 
 		// Handle images.
@@ -195,7 +200,7 @@ class Mai_United_Robots_Listener {
 	 *
 	 * @since 0.3.0
 	 *
-	 * @param array $data Slashed post data.
+	 * @param array $data    Slashed post data.
 	 * @param array $postarr Raw post data.
 	 *
 	 * @return array Slashed post data with modified post_modified and post_modified_gmt.
@@ -478,14 +483,20 @@ class Mai_United_Robots_Listener {
 
 		// If we have images, set the featured image and add the rest to the gallery.
 		if ( $image_ids ) {
-			// Set the featured image.
-			set_post_thumbnail( $this->post_id, $image_ids[0] );
+			// Remove and store the first.
+			$first = array_shift( $image_ids );
 
-			// Remove first image from gallery.
-			unset( $image_ids[0] );
+			// If we have a first image.
+			if ( $first ) {
+				// Set the featured image.
+				set_post_thumbnail( $this->post_id, $first );
+			}
 
-			// Add the rest of the images to the gallery.
-			update_post_meta( $this->post_id, 'image_gallery', array_values( $image_ids ) );
+			// If we have more images.
+			if ( $image_ids ) {
+				// Add the rest of the images to the gallery.
+				update_post_meta( $this->post_id, 'image_gallery', array_values( $image_ids ) );
+			}
 		}
 	}
 
