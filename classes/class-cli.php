@@ -40,6 +40,7 @@ class Mai_United_Robots_CLI {
 	 * Updates posts from stored United Robots data.
 	 *
 	 * Usage: wp maiunitedrobots update_posts --post_type=post --posts_per_page=10 --offset=0
+	 * Usage: wp maiunitedrobots update_posts --post_type=post --cat=6 --posts_per_page=10 --offset=0
 	 *
 	 * @since 0.2.0
 	 *
