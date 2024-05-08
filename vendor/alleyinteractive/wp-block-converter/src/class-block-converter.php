@@ -67,6 +67,7 @@ class Block_Converter {
 			}
 
 			// Merge the block into the HTML collection.
+
 			$html[] = $this->minify_block( (string) $tag_block );
 		}
 
@@ -170,6 +171,9 @@ class Block_Converter {
 		$content = static::get_node_html( $node );
 
 		if ( ! empty( filter_var( $node->textContent, FILTER_VALIDATE_URL ) ) ) {
+			if ( \str_contains( $node->textContent, '//x.com' ) || \str_contains( $node->textContent, '//www.x.com' ) ) {
+				$node->textContent = str_replace( 'x.com', 'twitter.com', $node->textContent );
+			}
 			// Instagram and Facebook embeds require an api key to retrieve oEmbed data.
 			if ( \str_contains( $node->textContent, 'instagram.com' ) ) {
 				return $this->instagram_embed( $node->textContent );
@@ -271,7 +275,7 @@ class Block_Converter {
 		$data = _wp_oembed_get_object()->get_data( $url, [] );
 
 		$aspect_ratio = '';
-		if ( ! empty( $data->height ) && ! empty( $data->width ) ) {
+		if ( ! empty( $data->height ) && ! empty( $data->width ) && is_numeric( $data->height ) && is_numeric( $data->width ) ) {
 			if ( 1.78 === round( $data->width / $data->height, 2 ) ) {
 				$aspect_ratio = '16-9';
 			}
@@ -443,8 +447,13 @@ class Block_Converter {
 	 * @return string
 	 */
 	protected function minify_block( $block ) {
-		if ( preg_match( '/(\s){2,}/s', $block ) === 1 ) {
-			return preg_replace( '/(\s){2,}/s', '', $block );
+		if ( \str_contains( $block, 'wp-block-embed' ) ) {
+			$pattern = '/(\h){2,}/s';
+		} else {
+			$pattern = '/(\s){2,}/s';
+		}
+		if ( preg_match( $pattern, $block ) === 1 ) {
+			return preg_replace( $pattern, '', $block );
 		}
 
 		return $block;
