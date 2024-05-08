@@ -92,6 +92,13 @@ class Mai_United_Robots_Real_Estate_Listener extends Mai_United_Robots_Listener 
 			$image_urls[] = $this->body['description']['streetview'];
 		}
 
+		// Maybe add the streetview images.
+		if ( isset( $this->body['description']['streetviews'] ) ) {
+			foreach ( $this->body['description']['streetviews'] as $image ) {
+				$image_urls[] = $image;
+			}
+		}
+
 		return $image_urls;
 	}
 }
