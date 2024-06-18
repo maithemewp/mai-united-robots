@@ -71,7 +71,7 @@ class Mai_United_Robots_Listener {
 		];
 
 		// Force modified time.
-		add_action( 'wp_insert_post_data', [ $this, 'force_modified_date' ], 20, 2 );
+		add_filter( 'wp_insert_post_data', [ $this, 'force_modified_date' ], 10, 4 );
 
 		// Get times.
 		$this->published_iso = isset( $this->body['sent']['first'] ) && $this->body['sent']['first'] ? $this->body['sent']['first'] : '';
@@ -200,12 +200,14 @@ class Mai_United_Robots_Listener {
 	 *
 	 * @since 0.3.0
 	 *
-	 * @param array $data    Slashed post data.
-	 * @param array $postarr Raw post data.
+	 * @param array $data                An array of slashed, sanitized, and processed post data.
+	 * @param array $postarr             An array of sanitized (and slashed) but otherwise unmodified post data.
+	 * @param array $unsanitized_postarr An array of slashed yet *unsanitized* and unprocessed post data as originally passed to wp_insert_post() .
+	 * @param bool  $update              Whether this is an existing post being updated.
 	 *
 	 * @return array Slashed post data with modified post_modified and post_modified_gmt.
 	 */
-	function force_modified_date( $data, $postarr ) {
+	function force_modified_date( $data, $postarr, $unsanitized_postarr, $update ) {
 		if ( $this->modified_iso && ( $this->modified_iso < wp_date( DATE_RFC3339, time(), new DateTimeZone( 'UTC' ) ) ) ) {
 			$data['post_modified']     = $this->get_date( $this->modified_iso );
 			$data['post_modified_gmt'] = get_gmt_from_date( $data['post_modified'] );
