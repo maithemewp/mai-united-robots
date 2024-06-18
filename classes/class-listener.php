@@ -567,6 +567,8 @@ class Mai_United_Robots_Listener {
 
 		// If streetview.
 		if ( $streetview_url ) {
+			$image_url      = html_entity_decode( $image_url, ENT_QUOTES | ENT_HTML5, 'UTF-8' ); // Some urls had `&amp;` instead of just `&`.
+			$image_url      = str_replace( ' ', '%20', $image_url ); // Some urls had spaces in the location, like `streetview?location=33.58829796031562, -78.98837933325625`.
 			$image_contents = file_get_contents( $image_url );
 			$image_hashed   = md5( $image_url ) . '.jpg';
 
