@@ -567,11 +567,11 @@ class Mai_United_Robots_Listener {
 			$image_contents = file_get_contents( $image_url );
 			$image_hashed   = md5( $image_url ) . '.jpg';
 
-			if ( $image_contents ) {
-				// Get the uploads directory.
-				$upload_dir = wp_get_upload_dir();
-				$upload_url = $upload_dir['baseurl'];
+			// Get the uploads directory.
+			$upload_dir = wp_get_upload_dir();
+			$upload_url = $upload_dir['baseurl'];
 
+			if ( $image_contents ) {
 				// Specify the path to the destination directory within uploads.
 				$destination_dir = $upload_dir['basedir'] . '/mai-united-robots/';
 
@@ -601,8 +601,8 @@ class Mai_United_Robots_Listener {
 		// Build a temp url.
 		$tmp = download_url( $image_url );
 
-		// If streetview.
-		if ( $streetview_url ) {
+		// If streetview and we have a destination file.
+		if ( $streetview_url && $destination_file ) {
 			// Remove the temp file.
 			@unlink( $destination_file );
 		}
