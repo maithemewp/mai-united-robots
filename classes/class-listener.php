@@ -560,7 +560,8 @@ class Mai_United_Robots_Listener {
 		$unitedrobots_url = $image_url;
 
 		// Check if the image is a streetview image.
-		$streetview_url = str_contains( $image_url, 'maps.googleapis.com/maps/api/streetview' );
+		$streetview_url   = str_contains( $image_url, 'maps.googleapis.com/maps/api/streetview' );
+		$destination_file = null;
 
 		// If streetview.
 		if ( $streetview_url ) {
@@ -610,9 +611,6 @@ class Mai_United_Robots_Listener {
 		// Bail if error.
 		if ( is_wp_error( $tmp ) ) {
 			mai_united_robots_logger( $tmp->get_error_code() . ': upload_image() 1 ' . $image_url . ' ' . $tmp->get_error_message() );
-
-			// Remove the original image and return the error.
-			@unlink( $tmp );
 			return 0;
 		}
 
