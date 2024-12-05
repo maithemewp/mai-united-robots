@@ -75,14 +75,11 @@ interface Router {
 	 * Dispatch a request to the registered routes.
 	 *
 	 * @param Request $request Request object.
-	 * @return Response|null
 	 */
 	public function dispatch( Request $request ): ?Response;
 
 	/**
 	 * Get registered routes.
-	 *
-	 * @return RouteCollection
 	 */
 	public function get_routes(): RouteCollection;
 
@@ -118,7 +115,6 @@ interface Router {
 	 *
 	 * @param string $old_name Old route name.
 	 * @param string $new_name New route name.
-	 * @return static
 	 *
 	 * @throws \InvalidArgumentException Thrown when attempting to rename a route
 	 *                                  a name that is already taken.
@@ -130,16 +126,28 @@ interface Router {
 	 *
 	 * @param  string $name
 	 * @param  array  $middleware
-	 * @return static
 	 */
-	public function middleware_group( $name, array $middleware );
+	public function middleware_group( string $name, array $middleware ): static;
 
 	/**
 	 * Register a short-hand name for a middleware.
 	 *
 	 * @param  string $name
 	 * @param  string $class
-	 * @return static
 	 */
-	public function alias_middleware( $name, $class );
+	public function alias_middleware( string $name, string $class ): static;
+
+	/**
+	 * Determine if the request should pass through to WordPress.
+	 *
+	 * @param (callable(Request): bool)|bool $callback Callback to determine if the request should pass through to WordPress.
+	 */
+	public function pass_requests_to_wordpress( $callback ): static;
+
+	/**
+	 * Determine if the request should pass through to WordPress.
+	 *
+	 * @param Request $request Request object.
+	 */
+	public function should_pass_through_request( Request $request ): bool;
 }

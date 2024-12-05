@@ -20,15 +20,11 @@ use function Mantle\Support\Helpers\value;
 class Environment {
 	/**
 	 * Variable repository.
-	 *
-	 * @var RepositoryInterface|null
 	 */
-	protected static ?RepositoryInterface $repository;
+	protected static ?RepositoryInterface $repository = null;
 
 	/**
 	 * Get the environment repository instance.
-	 *
-	 * @return \Dotenv\Repository\RepositoryInterface
 	 */
 	public static function get_repository(): RepositoryInterface {
 		if ( ! isset( static::$repository ) ) {
@@ -42,8 +38,6 @@ class Environment {
 
 	/**
 	 * Clear the environment repository instance.
-	 *
-	 * @return void
 	 */
 	public static function clear(): void {
 		static::$repository = null;
@@ -74,7 +68,7 @@ class Environment {
 		return $value
 			->map(
 				function ( $value ) {
-					switch ( strtolower( $value ) ) {
+					switch ( strtolower( (string) $value ) ) {
 						case 'true':
 						case '(true)':
 							return true;
@@ -89,7 +83,7 @@ class Environment {
 							return;
 					}
 
-					if ( preg_match( '/\A([\'"])(.*)\1\z/', $value, $matches ) ) {
+					if ( preg_match( '/\A([\'"])(.*)\1\z/', (string) $value, $matches ) ) {
 						return $matches[2];
 					}
 
@@ -97,9 +91,7 @@ class Environment {
 				}
 			)
 			->getOrCall(
-				function() use ( $default ) {
-					return value( $default );
-				}
+				fn () => value( $default )
 			);
 	}
 }

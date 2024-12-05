@@ -1,6 +1,28 @@
+
 # Changelog
 
 All notable changes to `WP Block Converter` will be documented in this file.
+
+## 1.5.0
+
+### Added
+
+- Add collection of attachments that are created during the conversion process.
+  Two methods now exist on the converter to help:
+  - `get_created_attachment_ids()` - Returns the attachment IDs that were created.
+  - `assign_parent_to_attachments()` - Assigns a parent post to all attachments.
+
+### Changed
+
+- Nested images are now properly sideloaded and converted to image blocks where
+  appropriate. For example, an image inside a figure tag will now be converted
+  to an image block. An image within a paragraph tag will be sideloaded but
+  won't be converted to an image block.
+
+## 1.4.0
+
+- Drops support for PHP 8.0.
+- Fixes issue with `<embed>` elements.
 
 ## 1.3.2
 

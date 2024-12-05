@@ -2,25 +2,23 @@
 /**
  * Collections class file.
  *
+ * phpcs:disable Squiz.Commenting.FunctionComment.MissingParamComment, Squiz.Commenting.FunctionComment.MissingParamTag
+ *
  * @package Mantle
  */
-
-// phpcs:disable Squiz.Commenting.FunctionComment.MissingParamComment
-
-// phpcs:disable Squiz.Commenting.FunctionComment.MissingParamTag
 
 namespace Mantle\Support;
 
 use ArrayAccess;
 use ArrayIterator;
 use Mantle\Contracts\Support\Arrayable;
-use Mantle\Support\Traits\Enumerates_Values;
 use Mantle\Database\Model;
+use Mantle\Support\Traits\Enumerates_Values;
+use stdClass;
+use Traversable;
 
 use function Mantle\Support\Helpers\data_get;
 use function Mantle\Support\Helpers\value;
-use stdClass;
-use Traversable;
 
 /**
  * Collection
@@ -144,9 +142,7 @@ class Collection implements ArrayAccess, Enumerable {
 	public function median( $key = null ) {
 		$values = ( isset( $key ) ? $this->pluck( $key ) : $this )
 			->filter(
-				function ( $item ) {
-					return ! is_null( $item );
-				}
+				fn ( $item ) => ! is_null( $item )
 			)->sort()->values();
 
 
@@ -186,7 +182,7 @@ class Collection implements ArrayAccess, Enumerable {
 		$counts = new self();
 
 		$collection->each(
-			function ( $value ) use ( $counts ) {
+			function ( $value ) use ( $counts ): void {
 				$counts[ $value ] = isset( $counts[ $value ] ) ? $counts[ $value ] + 1 : 1;
 			}
 		);
@@ -196,9 +192,7 @@ class Collection implements ArrayAccess, Enumerable {
 		$highest_value = $sorted->last();
 
 		return $sorted->filter(
-			function ( $value ) use ( $highest_value ) {
-				return $value == $highest_value;
-			}
+			fn ( $value ) => $value == $highest_value // phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison, Universal.Operators.StrictComparisons.LooseEqual
 		)->sort()->keys()->all();
 	}
 
@@ -227,7 +221,7 @@ class Collection implements ArrayAccess, Enumerable {
 				return $this->first( $key, $placeholder ) !== $placeholder;
 			}
 
-			return in_array( $key, $this->items );
+			return in_array( $key, $this->items ); // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
 		}
 
 		return $this->contains( $this->operator_for_where( ...func_get_args() ) );
@@ -242,7 +236,7 @@ class Collection implements ArrayAccess, Enumerable {
 	 */
 	public function contains_strict( $key, $value = null ) {
 		if ( func_num_args() === 2 ) {
-			return $this->contains( fn ( $item) => data_get( $item, $key ) === $value );
+			return $this->contains( fn ( $item ) => data_get( $item, $key ) === $value );
 		}
 
 		if ( $this->use_as_callable( $key ) ) {
@@ -390,14 +384,10 @@ class Collection implements ArrayAccess, Enumerable {
 	 */
 	protected function duplicate_comparator( $strict ) {
 		if ( $strict ) {
-			return function ( $a, $b ) {
-				return $a === $b;
-			};
+			return fn ( $a, $b ) => $a == $b; // phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison, Universal.Operators.StrictComparisons.LooseEqual
 		}
 
-		return function ( $a, $b ) {
-			return $a == $b;
-		};
+		return fn ( $a, $b ) => $a === $b;
 	}
 
 	/**
@@ -446,7 +436,7 @@ class Collection implements ArrayAccess, Enumerable {
 	/**
 	 * Get a flattened array of the items in the collection.
 	 *
-	 *  @param  int|float $depth
+	 * @param  int|float $depth
 	 * @return static<int, mixed>
 	 */
 	public function flatten( $depth = INF ) {
@@ -456,7 +446,7 @@ class Collection implements ArrayAccess, Enumerable {
 	/**
 	 * Flip the items in the collection.
 	 *
-	 * @return static<TValue, TKey>
+	 * @return static<int|string, TKey>
 	 */
 	public function flip() {
 		return new static( array_flip( $this->items ) );
@@ -566,13 +556,12 @@ class Collection implements ArrayAccess, Enumerable {
 	 * Determine if an item exists in the collection by key.
 	 *
 	 * @param  TKey|array<array-key, TKey> $key
-	 * @return bool
 	 */
-	public function has( $key ) {
+	public function has( $key ): bool {
 		$keys = is_array( $key ) ? $key : func_get_args();
 
-		foreach ( $keys as $value ) {
-			if ( ! $this->offsetExists( $value ) ) {
+		foreach ( $keys as $key ) {
+			if ( ! $this->offsetExists( $key ) ) {
 				return false;
 			}
 		}
@@ -594,11 +583,21 @@ class Collection implements ArrayAccess, Enumerable {
 
 		$first = $this->first();
 
-		if ( is_array( $first ) || is_object( $first ) ) {
+		if ( is_array( $first ) || ( is_object( $first ) && ! $first instanceof \Stringable ) ) {
 			return implode( $glue ?? '', $this->pluck( $value )->all() );
 		}
 
 		return implode( $value ?? '', $this->items );
+	}
+
+	/**
+	 * Concatenate values of a given key as a string and returns a stringable class.
+	 *
+	 * @param callable|string|null $value
+	 * @param string|null          $glue
+	 */
+	public function implode_str( $value, $glue = null ): Stringable {
+		return new Stringable( $this->implode( $value, $glue ) );
 	}
 
 	/**
@@ -649,19 +648,15 @@ class Collection implements ArrayAccess, Enumerable {
 
 	/**
 	 * Determine if the collection is empty or not.
-	 *
-	 * @return bool
 	 */
-	public function is_empty() {
+	public function is_empty(): bool {
 		return empty( $this->items );
 	}
 
 	/**
 	 * Determine if the collection contains a single item.
-	 *
-	 * @return bool
 	 */
-	public function contains_one_item() {
+	public function contains_one_item(): bool {
 		return $this->count() === 1;
 	}
 
@@ -760,6 +755,10 @@ class Collection implements ArrayAccess, Enumerable {
 		foreach ( $this->items as $key => $item ) {
 			$pair = $callback( $item, $key );
 
+			if ( ! $pair || ! is_array( $pair ) ) {
+				continue;
+			}
+
 			$key = key( $pair );
 
 			$value = reset( $pair );
@@ -790,6 +789,10 @@ class Collection implements ArrayAccess, Enumerable {
 
 		foreach ( $this->items as $key => $value ) {
 			$assoc = $callback( $value, $key );
+
+			if ( ! is_array( $assoc ) ) {
+				continue;
+			}
 
 			foreach ( $assoc as $map_key => $map_value ) {
 				$result[ $map_key ] = $map_value;
@@ -1060,7 +1063,7 @@ class Collection implements ArrayAccess, Enumerable {
 	 */
 	public function search( $value, $strict = false ) {
 		if ( ! $this->use_as_callable( $value ) ) {
-			return array_search( $value, $this->items, $strict );
+			return array_search( $value, $this->items, $strict ); // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
 		}
 
 		foreach ( $this->items as $key => $item ) {
@@ -1327,7 +1330,7 @@ class Collection implements ArrayAccess, Enumerable {
 	 * @template TZipValue
 	 *
 	 * @param  \Mantle\Contracts\Support\Arrayable<array-key, TZipValue>|iterable<array-key, TZipValue> ...$items
-	 * @return static<int, static<int, TValue|TZipValue>>
+	 * @return static<int, static<TKey, TValue|TZipValue>>
 	 */
 	public function zip( ...$items ) {
 		$arrayable_items = array_map(
@@ -1353,7 +1356,7 @@ class Collection implements ArrayAccess, Enumerable {
 	 * @return static<TKey, string>
 	 */
 	public function trim( string $char_list = "\n\r\t\v\x00" ) {
-		return new static( $this->map( fn ( $item ) => trim( $item, $char_list ) ) );
+		return new static( $this->map( fn ( $item ) => trim( (string) $item, $char_list ) ) );
 	}
 
 	/**
@@ -1380,8 +1383,6 @@ class Collection implements ArrayAccess, Enumerable {
 
 	/**
 	 * Count the number of items in the collection.
-	 *
-	 * @return int
 	 */
 	public function count(): int {
 		return count( $this->items );
@@ -1412,7 +1413,6 @@ class Collection implements ArrayAccess, Enumerable {
 	 * Determine if an item exists at an offset.
 	 *
 	 * @param mixed $key
-	 * @return bool
 	 */
 	public function offsetExists( mixed $key ): bool {
 		return array_key_exists( $key, $this->items );
@@ -1422,7 +1422,6 @@ class Collection implements ArrayAccess, Enumerable {
 	 * Get an item at a given offset.
 	 *
 	 * @param  mixed $key
-	 * @return mixed
 	 */
 	public function offsetGet( mixed $key ): mixed {
 		return $this->items[ $key ];
@@ -1433,7 +1432,6 @@ class Collection implements ArrayAccess, Enumerable {
 	 *
 	 * @param    mixed $key
 	 * @param    mixed $value
-	 * @return void
 	 */
 	public function offsetSet( mixed $key, mixed $value ): void {
 		if ( is_null( $key ) ) {
@@ -1447,7 +1445,6 @@ class Collection implements ArrayAccess, Enumerable {
 	 * Unset the item at a given offset.
 	 *
 	 * @param mixed $key
-	 * @return void
 	 */
 	public function offsetUnset( mixed $key ): void {
 		unset( $this->items[ $key ] );

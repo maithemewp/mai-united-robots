@@ -18,7 +18,6 @@ interface Model_Meta {
 	 *
 	 * @param string $meta_key Meta key to retrieve.
 	 * @param bool   $single Return the first meta key, defaults to true.
-	 * @return mixed
 	 */
 	public function get_meta( string $meta_key, bool $single = true ): mixed;
 
@@ -27,9 +26,8 @@ interface Model_Meta {
 	 *
 	 * @param string $meta_key Meta key.
 	 * @param mixed  $meta_value Meta value to store.
-	 * @param string $prev_value Optional, previous meta value.
 	 */
-	public function add_meta( string $meta_key, mixed $meta_value, mixed $prev_value = '' ): void;
+	public function add_meta( string $meta_key, mixed $meta_value ): void;
 
 	/**
 	 * Update meta value for the object.
@@ -73,7 +71,6 @@ interface Model_Meta {
 	 * @param string $key Meta key.
 	 * @param mixed  $value Meta value.
 	 * @param bool   $update Flag to update the queued meta.
-	 * @return void
 	 */
 	public function queue_meta_attribute( string $key, $value, bool $update = true ): void;
 
