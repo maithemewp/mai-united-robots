@@ -4,7 +4,7 @@
  * Plugin Name:     Mai United Robots
  * Plugin URI:      https://maitowne.com
  * Description:     A custom endpoint to receive data from United Robots.
- * Version:         0.6.0
+ * Version:         0.6.1
  *
  * Author:          BizBudding
  * Author URI:      https://bizbudding.com
@@ -85,7 +85,7 @@ final class Mai_United_Robots_Plugin {
 	private function setup_constants() {
 		// Plugin version.
 		if ( ! defined( 'MAI_UNITED_ROBOTS_VERSION' ) ) {
-			define( 'MAI_UNITED_ROBOTS_VERSION', '0.6.0' );
+			define( 'MAI_UNITED_ROBOTS_VERSION', '0.6.1' );
 		}
 
 		// Plugin Folder Path.
